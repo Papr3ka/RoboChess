@@ -47,7 +47,7 @@ class RoboChess {
             pieces.add(new Pawn(board, i, 6, BasePiece.Side.White));
         }
 
-        return null; // Error
+        return pieces;
     }
 
     public static void main(String[] args){
