@@ -10,7 +10,7 @@ public class Queen extends BasePiece{
         
         super(chessBoard, x, y, side_ == Side.White ? Direction.NORTH : Direction.SOUTH);
         side = side_;
-        if(side == Side.White){
+        if(side == Side.White){///dsadas
             setColor(Color.WHITE);
         }else{
             setColor(Color.BLACK);
