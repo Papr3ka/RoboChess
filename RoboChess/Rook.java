@@ -1,7 +1,19 @@
-import becker.robots.Direction;
+import java.awt.Color;
+
+import becker.robots.*;
 
 public class Rook extends BasePiece{
-    public Rook(Board chessBoard, int x, int y, Side side){
-        super(chessBoard, x, y, side == Side.White ? Direction.NORTH : Direction.SOUTH);
+
+    private Side side;
+
+    public Rook(Board chessBoard, int x, int y, Side side_){
+        
+        super(chessBoard, x, y, side_ == Side.White ? Direction.NORTH : Direction.SOUTH);
+        side = side_;
+        if(side == Side.White){
+            setColor(Color.WHITE);
+        }else{
+            setColor(Color.BLACK);
+        }
     }
 }

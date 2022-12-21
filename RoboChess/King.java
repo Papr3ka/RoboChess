@@ -1,7 +1,19 @@
-import becker.robots.Direction;
+import java.awt.Color;
 
-public class King extends BasePiece {
-    public King(Board chessBoard, int x, int y, Side side){
-        super(chessBoard, x, y, side == Side.White ? Direction.NORTH : Direction.SOUTH);
+import becker.robots.*;
+
+public class King extends BasePiece{
+
+    private Side side;
+
+    public King(Board chessBoard, int x, int y, Side side_){
+        
+        super(chessBoard, x, y, side_ == Side.White ? Direction.NORTH : Direction.SOUTH);
+        side = side_;
+        if(side == Side.White){
+            setColor(Color.WHITE);
+        }else{
+            setColor(Color.BLACK);
+        }
     }
 }
