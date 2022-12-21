@@ -3,6 +3,10 @@ import becker.robots.Robot;
 
 public class BasePiece extends Robot{
 
+    public enum Side{
+        White, Black
+    }
+
     public BasePiece(Board chessBoard, int x, int y, Direction direction){
         super(chessBoard.getState()[0], y, x, direction);
     }

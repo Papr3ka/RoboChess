@@ -6,7 +6,7 @@ public class Board{
 
 
     public Board(){
-        chessBoard = new City[]{new City(8, 8)};
+        chessBoard = new City[]{new City(8, 8)}; // 8x8 chess board, indexes from 0-7
     }
 
     // returns reference of City
