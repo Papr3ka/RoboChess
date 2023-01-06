@@ -1,4 +1,5 @@
 import java.util.Vector;
+import java.awt.Color;
 
 import becker.robots.Direction;
 
@@ -51,7 +52,35 @@ class RoboChess {
     }
 
     public static void main(String[] args){
-        Board chessBoard = new Board();
+        // Initialize Chess Board
+        Board chessBoard = new Board(new Color(234, 233, 210, 255), new Color(75, 115, 153, 255));
         Vector<Object> chessPieces = initializeBoard(chessBoard);
+
+        // Initialize Selector
+
+        // Initialize Position indicators
+
+        // Initialize gamestates (turn, checkmate)
+
+        // Main loop
+
+            // Wait for user input to move selector
+
+            // Detect selection
+
+            // Verify selection (is it on a peice? is the peice on the current side whose turn it is?)
+
+            // Display possible options for the peice
+
+            // Wait for user to select option
+
+            // Verify selected option (Will it put its own king in check? etc...)
+
+                // If invalid, restart from same player
+
+                // If valid, execute option, change turn
+
+            // Check gamestate (check for checkmate, stalemate)
+
     }    
 }
