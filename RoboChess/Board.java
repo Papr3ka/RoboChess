@@ -19,10 +19,10 @@ public class Board extends City{
     private Rectangle2D shapeConst;
 
     public Board(Color colorWhite_, Color colorBlack_){
-        super(8, 8);
+        super(8, 8); // 8x8 chess board, indexes from 0-7
 
         // Code here seems a bit sus (unsafe)
-        chessBoard = new City[]{this}; // 8x8 chess board, indexes from 0-7
+        chessBoard = new City[]{this}; 
 
         colorWhite = colorWhite_;
         colorBlack = colorBlack_;
@@ -36,6 +36,7 @@ public class Board extends City{
 
     // returns reference of City
     public City[] getState(){
+        chessBoard[0] = this;
         return chessBoard;
     }
 
