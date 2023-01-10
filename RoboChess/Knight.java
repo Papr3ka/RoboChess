@@ -1,4 +1,4 @@
-import java.util.Vector;
+import java.util.ArrayList;
 import java.awt.Color;
 import java.awt.Point;
 
@@ -19,9 +19,9 @@ public class Knight extends BasePiece{
         setColor(color);
     }
 
-    public Vector<Point> getNextPositions(Vector<Point> currentSide, Vector<Point> oppositeSide){
-        Vector<Point> nextPositions = new Vector<Point>();
-        Vector<Point> nextPotentialPositions = getNextCovers(currentSide, oppositeSide);
+    public ArrayList<Point> getNextPositions(ArrayList<Point> currentSide, ArrayList<Point> oppositeSide){
+        ArrayList<Point> nextPositions = new ArrayList<Point>();
+        ArrayList<Point> nextPotentialPositions = getNextCovers(currentSide, oppositeSide);
         
         for(Point p: nextPotentialPositions){
             if(!currentSide.contains(p)){
@@ -33,9 +33,9 @@ public class Knight extends BasePiece{
     }
 
     // Returns all the points in which the knight is covering
-    public Vector<Point> getNextCovers(Vector<Point> currentSide, Vector<Point> oppositeSide){
-        Vector<Point> nextPotentialCovers = new Vector<Point>();
-        Vector<Point> nextCovers = new Vector<Point>();
+    public ArrayList<Point> getNextCovers(ArrayList<Point> currentSide, ArrayList<Point> oppositeSide){
+        ArrayList<Point> nextPotentialCovers = new ArrayList<Point>();
+        ArrayList<Point> nextCovers = new ArrayList<Point>();
 
         Point testPoint;
         testPoint = getPos();

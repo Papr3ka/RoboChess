@@ -1,4 +1,4 @@
-import java.util.Vector;
+import java.util.ArrayList;
 import java.awt.Color;
 import java.awt.Point;
 
@@ -22,16 +22,16 @@ public class Queen extends BasePiece{
         setColor(color);
     }
 
-    public Vector<Point> getNextPositions(Vector<Point> currentSide, Vector<Point> oppositeSide){
-        Vector<Point> nextPositions = new Vector<Point>();
+    public ArrayList<Point> getNextPositions(ArrayList<Point> currentSide, ArrayList<Point> oppositeSide){
+        ArrayList<Point> nextPositions = new ArrayList<Point>();
 
         // 
 
         return nextPositions;
     }
 
-    public Vector<Point> getNextCovers(Vector<Point> currentSide, Vector<Point> oppositeSide){
-        Vector<Point> nextCovers = new Vector<Point>();
+    public ArrayList<Point> getNextCovers(ArrayList<Point> currentSide, ArrayList<Point> oppositeSide){
+        ArrayList<Point> nextCovers = new ArrayList<Point>();
 
         // 
 

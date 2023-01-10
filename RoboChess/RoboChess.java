@@ -2,7 +2,7 @@ import java.awt.Color;
 import java.awt.Point;
 import java.lang.Math;
 import java.lang.Thread;
-import java.util.Vector;
+import java.util.ArrayList;
 
 import becker.robots.Direction;
 
@@ -21,8 +21,8 @@ class RoboChess {
     }
 
 
-    public static Vector<BasePiece> initializeBoard(Board board){
-        Vector<BasePiece> pieces = new Vector<BasePiece>();
+    public static ArrayList<BasePiece> initializeBoard(Board board){
+        ArrayList<BasePiece> pieces = new ArrayList<BasePiece>();
 
         // Black Pieces
         pieces.add(new Rook(board, 0, 0, BasePiece.Side.Black));
@@ -66,16 +66,16 @@ class RoboChess {
         return pieces;
     }
 
-    public static Vector<Point> getAllPoints(Vector<BasePiece> pieces){
-        Vector<Point> allPoints = new Vector<Point>();
+    public static ArrayList<Point> getAllPoints(ArrayList<BasePiece> pieces){
+        ArrayList<Point> allPoints = new ArrayList<Point>();
         for(BasePiece piece: pieces){
             allPoints.add(piece.getPos());
         }
         return allPoints;
     }
 
-    public static Vector<Point> getSidePoints(Vector<BasePiece> pieces, BasePiece.Side side){
-        Vector<Point> allPoints = new Vector<Point>();
+    public static ArrayList<Point> getSidePoints(ArrayList<BasePiece> pieces, BasePiece.Side side){
+        ArrayList<Point> allPoints = new ArrayList<Point>();
         for(BasePiece piece: pieces){
             if(piece.getSide() == side){
                 allPoints.add(piece.getPos());
@@ -85,7 +85,7 @@ class RoboChess {
     }
 
     // Returns the index of a piece at a point, returns -1
-    public static int getPieceAt(Vector<BasePiece> pieces, Point p){
+    public static int getPieceAt(ArrayList<BasePiece> pieces, Point p){
         for(int i = 0; i < pieces.size(); i++){
             if(pieces.get(i).getPos().equals(p)){
                 return i;
@@ -106,7 +106,7 @@ class RoboChess {
     }
 
 
-    public static int smallestVarVec(Vector<Double> vec){
+    public static int smallestVarVec(ArrayList<Double> vec){
         // Error
         if(vec.size() == 0){
             return -1;
@@ -126,7 +126,7 @@ class RoboChess {
     }
 
     // Finds the closest point in the corresponding direction
-    public static Point moveNextPoint(Point current, Vector<Point> options, Direction direction){
+    public static Point moveNextPoint(Point current, ArrayList<Point> options, Direction direction){
 
         for(int i = options.size() - 1; i >= 0 ; i--){
             if(options.get(i).equals(current)){
@@ -134,7 +134,7 @@ class RoboChess {
             }
         }
 
-        Vector<Double> distances = new Vector<Double>();
+        ArrayList<Double> distances = new ArrayList<Double>();
 
         Point cPoint;
 
@@ -205,7 +205,7 @@ class RoboChess {
     public static void main(String[] args){
         // Initialize Chess Board
         Board chessBoard = new Board(new Color(234, 233, 210, 255), new Color(75, 115, 153, 255));
-        Vector<BasePiece> chessPieces = initializeBoard(chessBoard); // Polymorphism
+        ArrayList<BasePiece> chessPieces = initializeBoard(chessBoard); // Polymorphism
 
         // Initialize KeyListener
         KeyListener keyListener = new KeyListener(chessBoard);
@@ -227,7 +227,7 @@ class RoboChess {
         boolean check = false;
 
         // Other variables
-        Vector<Point> subPoints = new Vector<Point>();
+        ArrayList<Point> subPoints = new ArrayList<Point>();
         int selectedPieceIndex = -1;
         boolean inSubState = false;
 

@@ -1,4 +1,4 @@
-import java.util.Vector;
+import java.util.ArrayList;
 import java.awt.Color;
 import java.awt.Point;
 
@@ -45,14 +45,14 @@ public class BasePiece extends Robot{
         return new Point(getAvenue(), getStreet());
     }
 
-    public Vector<Point> getNextPositions(Vector<Point> currentSide, Vector<Point> oppositeSide){
-        Vector<Point> current = new Vector<Point>();
+    public ArrayList<Point> getNextPositions(ArrayList<Point> currentSide, ArrayList<Point> oppositeSide){
+        ArrayList<Point> current = new ArrayList<Point>();
         current.add(getPos());
         return current;
     }
 
-    public Vector<Point> getNextCovers(Vector<Point> currentSide, Vector<Point> oppositeSide){
-        Vector<Point> current = new Vector<Point>();
+    public ArrayList<Point> getNextCovers(ArrayList<Point> currentSide, ArrayList<Point> oppositeSide){
+        ArrayList<Point> current = new ArrayList<Point>();
         current.add(getPos());
         return current;
     }
