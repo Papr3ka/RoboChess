@@ -1,14 +1,10 @@
 import java.util.Vector;
-
 import java.awt.Color;
 import java.awt.Point;
 
 import becker.robots.*;
 
 public class Knight extends BasePiece{
-
-    private Side side;
-    private Color color;
 
     public Knight(Board chessBoard, int x, int y, Side side_){
         
@@ -23,104 +19,58 @@ public class Knight extends BasePiece{
         setColor(color);
     }
 
-    // Returns the positions in which the knight can move to
-    // requires separate entity check
-    public Vector<Point> getNextPositions(Point king){
-        Vector<Point> checks = new Vector<Point>();
+    public Vector<Point> getNextPositions(Vector<Point> currentSide, Vector<Point> oppositeSide){
+        Vector<Point> nextPositions = new Vector<Point>();
+        Vector<Point> nextPotentialPositions = getNextCovers(currentSide, oppositeSide);
+        
+        for(Point p: nextPotentialPositions){
+            if(!currentSide.contains(p)){
+                nextPositions.add(p);
+            }
+        }
+
+        return nextPositions;
+    }
+
+    // Returns all the points in which the knight is covering
+    public Vector<Point> getNextCovers(Vector<Point> currentSide, Vector<Point> oppositeSide){
+        Vector<Point> nextPotentialCovers = new Vector<Point>();
+        Vector<Point> nextCovers = new Vector<Point>();
+
         Point testPoint;
         testPoint = getPos();
         testPoint.translate(1, 2);
-        if(checkLimits(testPoint, king)){
-            checks.add(testPoint);
-            testPoint = getPos();
-        }
-        testPoint.translate(-1, 2);
-        if(checkLimits(testPoint, king)){
-            checks.add(testPoint);
-            testPoint = getPos();
-        }
-        testPoint.translate(1, -2);
-        if(checkLimits(testPoint, king)){
-            checks.add(testPoint);
-            testPoint = getPos();
-        }
-        testPoint.translate(-1, -2);
-        if(checkLimits(testPoint, king)){
-            checks.add(testPoint);
-            testPoint = getPos();
-        }
-        //////
-        testPoint.translate(2, 1);
-        if(checkLimits(testPoint, king)){
-            checks.add(testPoint);
-            testPoint = getPos();
-        }
-        testPoint.translate(2, -1);
-        if(checkLimits(testPoint, king)){
-            checks.add(testPoint);
-            testPoint = getPos();
-        }
-        testPoint.translate(-2, 1);
-        if(checkLimits(testPoint, king)){
-            checks.add(testPoint);
-            testPoint = getPos();
-        }
-        testPoint.translate(-2, -1);
-        if(checkLimits(testPoint, king)){
-            checks.add(testPoint);
-            testPoint = getPos();
-        }
-
-        return checks;
-    }
-
-    // Returns points in which the knight is covering
-    public Vector<Point> getCovers(){
-        Vector<Point> checks = new Vector<Point>();
-        Point testPoint;
+        nextPotentialCovers.add(testPoint);
         testPoint = getPos();
-        testPoint.translate(1, 2);
-        if(checkLimits(testPoint)){
-            checks.add(testPoint);
-            testPoint = getPos();
-        }
         testPoint.translate(-1, 2);
-        if(checkLimits(testPoint)){
-            checks.add(testPoint);
-            testPoint = getPos();
-        }
+        nextPotentialCovers.add(testPoint);
+        testPoint = getPos();
         testPoint.translate(1, -2);
-        if(checkLimits(testPoint)){
-            checks.add(testPoint);
-            testPoint = getPos();
-        }
+        nextPotentialCovers.add(testPoint);
+        testPoint = getPos();
         testPoint.translate(-1, -2);
-        if(checkLimits(testPoint)){
-            checks.add(testPoint);
-            testPoint = getPos();
-        }
+        nextPotentialCovers.add(testPoint);
+        testPoint = getPos();
         //////
         testPoint.translate(2, 1);
-        if(checkLimits(testPoint)){
-            checks.add(testPoint);
-            testPoint = getPos();
-        }
+        nextPotentialCovers.add(testPoint);
+        testPoint = getPos();
         testPoint.translate(2, -1);
-        if(checkLimits(testPoint)){
-            checks.add(testPoint);
-            testPoint = getPos();
-        }
+        nextPotentialCovers.add(testPoint);
+        testPoint = getPos();
         testPoint.translate(-2, 1);
-        if(checkLimits(testPoint)){
-            checks.add(testPoint);
-            testPoint = getPos();
-        }
+        nextPotentialCovers.add(testPoint);
+        testPoint = getPos();
         testPoint.translate(-2, -1);
-        if(checkLimits(testPoint)){
-            checks.add(testPoint);
-            testPoint = getPos();
+        nextPotentialCovers.add(testPoint);
+        
+        for(Point p: nextPotentialCovers){
+            if(checkLimits(p)){
+                nextCovers.add(p);
+            }
         }
 
-        return checks;
+        return nextCovers;
     }
+
 }

@@ -1,11 +1,10 @@
+import java.util.Vector;
 import java.awt.Color;
+import java.awt.Point;
 
 import becker.robots.*;
 
 public class Rook extends BasePiece{
-
-    private Side side;
-    private Color color;
 
     public Rook(Board chessBoard, int x, int y, Side side_){
         
@@ -18,5 +17,21 @@ public class Rook extends BasePiece{
         }
 
         setColor(color);
+    }
+
+    public Vector<Point> getNextPositions(Vector<Point> currentSide, Vector<Point> oppositeSide){
+        Vector<Point> nextPositions = new Vector<Point>();
+
+        // 
+
+        return nextPositions;
+    }
+
+    public Vector<Point> getNextCovers(Vector<Point> currentSide, Vector<Point> oppositeSide){
+        Vector<Point> nextCovers = new Vector<Point>();
+
+        // 
+
+        return nextCovers;
     }
 }
