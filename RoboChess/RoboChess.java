@@ -222,7 +222,7 @@ class RoboChess {
         Color optionsColor = new Color(141, 182, 0, 255);
 
         // Initialize gamestates (turn, checkmate)
-        BasePiece.Side turn = BasePiece.Side.White;
+        BasePiece.Side turn = BasePiece.Side.White; // White first
         boolean checkMate = false;
         boolean check = false;
 
@@ -230,6 +230,7 @@ class RoboChess {
         ArrayList<Point> subPoints = new ArrayList<Point>();
         int selectedPieceIndex = -1;
         boolean inSubState = false;
+        boolean isPieceLocked = false;
 
         // Main loop
         while(!checkMate){
@@ -306,6 +307,7 @@ class RoboChess {
             // Wait for user to select option
             while(inSubState){
 
+                // Gets the next positions in which the piece can move to
                 subPoints = chessPieces.get(selectedPieceIndex).getNextPositions(getSidePoints(chessPieces, turn), getSidePoints(chessPieces, oppositeTurn(turn)));
 
                 if(!selectorIsHidden){
@@ -342,6 +344,24 @@ class RoboChess {
     
                     case 10: // Enter
                         // Move piece here
+            
+                        chessPieces.get(selectedPieceIndex).moveTo(subSelector);
+
+                        for(int i = chessPieces.size() - 1; i >= 0; i--){
+                            if(chessPieces.get(i).getPos().equals(subSelector) && chessPieces.get(i).getSide() == oppositeTurn(turn)){
+                                chessPieces.get(i).eliminate();
+                                chessPieces.remove(i);
+                                break;
+                            }
+                        }
+                        
+                        turn = oppositeTurn(turn);
+                        inSubState = false;
+                        chessBoard.refreshBoard();
+                        if(!selectorIsHidden){
+                            
+                            chessBoard.selectBoard(selector.x, selector.y, selectionColor);
+                        }
                         break;
     
                     case 27: // ESCape key

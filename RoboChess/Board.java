@@ -1,5 +1,3 @@
-import java.util.ArrayList;
-
 import becker.robots.*;
 import becker.robots.icons.*;
 import java.awt.geom.Rectangle2D;
@@ -20,6 +18,7 @@ public class Board extends City{
 
     public Board(Color colorWhite_, Color colorBlack_){
         super(8, 8); // 8x8 chess board, indexes from 0-7
+        setFrameTitle("RoboChess");
 
         // Code here seems a bit sus (unsafe)
         chessBoard = new City[]{this}; 
