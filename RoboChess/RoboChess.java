@@ -347,6 +347,7 @@ class RoboChess {
             
                         chessPieces.get(selectedPieceIndex).moveTo(subSelector);
 
+                        // eliminate piece
                         for(int i = chessPieces.size() - 1; i >= 0; i--){
                             if(chessPieces.get(i).getPos().equals(subSelector) && chessPieces.get(i).getSide() == oppositeTurn(turn)){
                                 chessPieces.get(i).eliminate();
@@ -362,6 +363,7 @@ class RoboChess {
                             
                             chessBoard.selectBoard(selector.x, selector.y, selectionColor);
                         }
+                        selector = subSelector;
                         break;
     
                     case 27: // ESCape key
