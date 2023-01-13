@@ -16,10 +16,17 @@ public class QueenIcon extends ShapeIcon
 
      static
      {  shape = new GeneralPath();
-        shape.moveTo(0.5F, 0.2F);
-        shape.lineTo(0.0F, 1.0F);
-        shape.lineTo(0.5F, 0.7F);
-        shape.lineTo(1.0F, 1.0F);
+        
+        shape.moveTo(0.5F, 0.0F);
+        
+        
+        shape.lineTo(0.2F, 1.0F);
+        shape.lineTo(0.72F, 1.0F);
+        
+        
+        shape.closePath();
+
+        
         shape.closePath();
 
      }

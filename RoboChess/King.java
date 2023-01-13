@@ -15,7 +15,7 @@ public class King extends BasePiece{
         }else{
             color = Color.BLACK;
         }
-
+        setIcon(new KingIcon(color));
         setColor(color);
     }
 
