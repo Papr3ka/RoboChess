@@ -15,7 +15,8 @@ public class Queen extends BasePiece{
         }else{
             color = Color.BLACK;
         }
-
+        
+        setIcon(new QueenIcon(color));
         setColor(color);
     }
 
