@@ -40,7 +40,7 @@ public class RookIcon extends ShapeIcon
         shape.lineTo(0.05F, 1.0F);
         shape.lineTo(0.95F, 1.0F);
         
-        shape.lineTo(0.95F, 0.9F);
+       
         shape.lineTo(0.9F, 0.9F);
         shape.lineTo(0.9F, 0.8F);
         shape.lineTo(0.83F, 0.8F);

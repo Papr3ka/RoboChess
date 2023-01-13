@@ -15,7 +15,7 @@ public class Knight extends BasePiece{
         }else{
             color = Color.BLACK;
         }
-
+        setIcon(new KnightIcon(color));
         setColor(color);
     }
 

@@ -1,33 +1,53 @@
 
-/**
- * Write a description of class KnightIcon here.
- *
- * @author (your name)
- * @version (a version number or a date)
- */
-public class KnightIcon
-{
-    // instance variables - replace the example below with your own
-    private int x;
+import becker.robots.icons.*;
+import java.awt.geom.GeneralPath;
+import java.awt.Color;
 
-    /**
-     * Constructor for objects of class KnightIcon
-     */
-    public KnightIcon()
-    {
-        // initialise instance variables
-        x = 0;
-    }
+public class KnightIcon extends ShapeIcon
+  {
+     public KnightIcon(Color color)
+     {  this(color, 0.8);
+     }
 
-    /**
-     * An example of a method - replace this comment with your own
-     *
-     * @param  y  a sample parameter for a method
-     * @return    the sum of x and y
-     */
-    public int sampleMethod(int y)
-    {
-        // put your code here
-        return x + y;
-    }
-}
+     public KnightIcon(Color color, double relativeSize)
+     {  super(KnightIcon.shape, color, relativeSize);
+     }
+
+     private static GeneralPath shape;
+
+     static
+     {  shape = new GeneralPath();
+        
+        shape.moveTo(0.75F, 0.3F);
+        
+        shape.lineTo(0.65F, 0.15F);
+        shape.lineTo(0.45F, 0.1F);
+        shape.lineTo(0.45F, 0.05F);
+        shape.lineTo(0.38F, 0.05F);
+        shape.lineTo(0.35F, 0.17F);
+        shape.lineTo(0.15F, 0.4F);
+        
+        shape.lineTo(0.2F, 0.5F);
+        shape.lineTo(0.2F, 0.55F);
+        shape.lineTo(0.3F, 0.55F);
+        shape.lineTo(0.33F, 0.51F);
+        shape.lineTo(0.4F, 0.51F);
+        shape.lineTo(0.5F, 0.45F);
+        shape.lineTo(0.5F, 0.45F);
+        
+        shape.lineTo(0.5F, 0.5F);
+        
+        shape.lineTo(0.25F, 0.9F);
+        shape.lineTo(0.2F, 0.9F);
+        shape.lineTo(0.15F, 1.0F);
+        shape.lineTo(0.85F, 1.0F);
+        shape.lineTo(0.8F, 0.9F);
+        
+        shape.lineTo(0.75F, 0.9F);
+        shape.lineTo(0.8F, 0.5F);
+        shape.lineTo(0.75F, 0.3F);
+        
+        shape.closePath();
+
+     }
+  }
