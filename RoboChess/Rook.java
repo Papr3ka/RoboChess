@@ -15,7 +15,7 @@ public class Rook extends BasePiece{
         }else{
             color = Color.BLACK;
         }
-
+        setIcon(new RookIcon(color));
         setColor(color);
     }
 

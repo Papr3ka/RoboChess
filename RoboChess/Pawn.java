@@ -15,7 +15,7 @@ public class Pawn extends BasePiece{
         }else{
             color = Color.BLACK;
         }
-
+        setIcon(new PawnIcon(color));
         setColor(color);
     }
 
