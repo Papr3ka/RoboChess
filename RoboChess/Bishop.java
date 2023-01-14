@@ -15,7 +15,7 @@ public class Bishop extends BasePiece{
         }else{
             color = Color.BLACK;
         }
-
+        setIcon(new BishopIcon(color));
         setColor(color);
     }
 

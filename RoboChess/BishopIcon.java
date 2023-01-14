@@ -1,33 +1,49 @@
+import becker.robots.icons.*;
+import java.awt.geom.GeneralPath;
+import java.awt.Color;
 
-/**
- * Write a description of class BishopIcon here.
- *
- * @author (your name)
- * @version (a version number or a date)
- */
-public class BishopIcon
-{
-    // instance variables - replace the example below with your own
-    private int x;
+public class BishopIcon extends ShapeIcon
+  {
+     public BishopIcon(Color color)
+     {  this(color, 0.8);
+     }
 
-    /**
-     * Constructor for objects of class BishopIcon
-     */
-    public BishopIcon()
-    {
-        // initialise instance variables
-        x = 0;
-    }
+     public BishopIcon(Color color, double relativeSize)
+     {  super(BishopIcon.shape, color, relativeSize);
+     }
 
-    /**
-     * An example of a method - replace this comment with your own
-     *
-     * @param  y  a sample parameter for a method
-     * @return    the sum of x and y
-     */
-    public int sampleMethod(int y)
-    {
-        // put your code here
-        return x + y;
-    }
-}
+     private static GeneralPath shape;
+
+     static
+     {  shape = new GeneralPath();
+        
+        shape.moveTo(0.52F, 0.15F);
+        
+        shape.lineTo(0.55F, 0.05F);
+        shape.lineTo(0.45F, 0.05F);
+        shape.lineTo(0.48F, 0.15F);
+        shape.lineTo(0.3F, 0.3F);
+        
+        shape.lineTo(0.2F, 0.6F);
+        shape.lineTo(0.25F, 0.73F);
+        shape.lineTo(0.35F, 0.73F);
+        shape.lineTo(0.25F, 0.9F);
+        
+        shape.lineTo(0.2F, 0.9F);
+        shape.lineTo(0.15F, 1.0F);
+        shape.lineTo(0.85F, 1.0F);
+        shape.lineTo(0.8F, 0.9F);
+        
+        shape.lineTo(0.75F, 0.9F);
+        shape.lineTo(0.65F, 0.73F);
+        shape.lineTo(0.75F, 0.73F);
+        shape.lineTo(0.8F, 0.6F);
+        
+        shape.lineTo(0.72F, 0.35F);
+        shape.lineTo(0.58F, 0.48F);
+        shape.lineTo(0.52F, 0.42F);
+        shape.lineTo(0.675F, 0.28F);
+        shape.closePath();
+
+     }
+  }
