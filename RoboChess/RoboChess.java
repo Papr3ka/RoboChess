@@ -202,6 +202,35 @@ class RoboChess {
         return BasePiece.Side.White;
     }
 
+    // Returns true if the king is in check
+    public static boolean checkCheck(ArrayList<BasePiece> chessPieces, BasePiece.Side turn){
+        int kingIdx = -1;
+        for(int idx = 0; idx < chessPieces.size(); idx++){
+            if(chessPieces.get(idx) instanceof King && chessPieces.get(idx).getSide() == turn){
+                kingIdx = idx;
+                break;
+            }
+        }
+
+        if(kingIdx == -1){
+            return false; // Should not happen
+        }
+
+        ArrayList<Point> covers = new ArrayList<Point>();
+        chessPieces.get(kingIdx).hide(); // Hide the king from other pieces
+        for(int i = 0; i < chessPieces.size(); i++){
+            if(chessPieces.get(i).getSide() == oppositeTurn(turn)){
+                covers.addAll(chessPieces.get(i).getNextCovers(getSidePoints(chessPieces, turn), getSidePoints(chessPieces, oppositeTurn(turn))));
+            }
+        }
+        chessPieces.get(kingIdx).show();
+        if(covers.contains(chessPieces.get(kingIdx).getPos())){
+            return true;
+        }
+
+        return false;
+    }
+
     public static void main(String[] args){
         // Initialize Chess Board
         Board chessBoard = new Board(new Color(234, 233, 210, 255), new Color(75, 115, 153, 255));
@@ -227,10 +256,15 @@ class RoboChess {
         boolean check = false;
 
         // Other variables
+        ArrayList<Point> covers = new ArrayList<Point>();
         ArrayList<Point> subPoints = new ArrayList<Point>();
         int selectedPieceIndex = -1;
         boolean inSubState = false;
         boolean isPieceLocked = false;
+        boolean isPointClear = true;
+        Point originalPos;
+        Point tempPos;
+        Point kingPos = new Point(64, 64);
 
         // Main loop
         while(!checkMate){
@@ -238,6 +272,8 @@ class RoboChess {
             if(!selectorIsHidden){
                 chessBoard.selectBoard(selector.x, selector.y, selectionColor);
             }
+
+            covers.clear();
 
             keyPress = waitKeyInterrupt(keyListener);
 
@@ -309,6 +345,75 @@ class RoboChess {
 
                 // Gets the next positions in which the piece can move to
                 subPoints = chessPieces.get(selectedPieceIndex).getNextPositions(getSidePoints(chessPieces, turn), getSidePoints(chessPieces, oppositeTurn(turn)));
+
+                covers.clear();
+                originalPos = chessPieces.get(selectedPieceIndex).getPos();
+                
+                // Ensure invalid moves cannot be made involving the king
+                if(chessPieces.get(selectedPieceIndex) instanceof King){
+
+                    // Remove all the points that would put the king in check
+                    chessPieces.get(selectedPieceIndex).hide(); // Hide the king from other pieces
+                    for(int i = 0; i < chessPieces.size(); i++){
+                        if(chessPieces.get(i).getSide() == oppositeTurn(turn)){
+                            covers.addAll(chessPieces.get(i).getNextCovers(getSidePoints(chessPieces, turn), getSidePoints(chessPieces, oppositeTurn(turn))));
+                        }
+                    }
+                    chessPieces.get(selectedPieceIndex).show();
+                    for(int i = subPoints.size() - 1; i >= 0; i--){
+                        if(covers.contains(subPoints.get(i))){
+                            subPoints.remove(i);
+                        }
+                    }
+
+                    //if(subPoints.size() == 0 &&)
+
+                    // for(int i = subPoints.size() - 1; i >= 0; i--){
+                    //     chessPieces.get(selectedPieceIndex).moveToPoint(subPoints.get(i));
+                    //     for(int j = 0; j < chessPieces.size(); j++){
+                    //         if(chessPieces.get(j).getSide() == oppositeTurn(turn)){
+                    //             covers.addAll(chessPieces.get(j).getNextCovers(getSidePoints(chessPieces, turn), getSidePoints(chessPieces, oppositeTurn(turn))));
+                    //         }
+                    //     }
+                    //     if(covers.contains(chessPieces.get(selectedPieceIndex).getPos())){
+                    //         subPoints.remove(i);
+                    //     }
+                    //     chessPieces.get(selectedPieceIndex).moveToPoint(originalPos);
+                    // }
+                }else{
+
+                    for(int i = subPoints.size() - 1; i >= 0; i--){
+                        chessPieces.get(selectedPieceIndex).moveToPoint(subPoints.get(i));
+                        isPointClear = true;
+                        for(int j = 0; j < chessPieces.size(); j++){
+                            if(chessPieces.get(j).getPos().equals(subPoints.get(i)) && chessPieces.get(j).getSide() == oppositeTurn(turn)){
+                                isPointClear = false;
+                                chessPieces.get(j).hide();
+                                if(checkCheck(chessPieces, turn)){
+                                    chessPieces.get(j).show();
+                                    subPoints.remove(i);
+                                    break;
+
+                                }
+                                chessPieces.get(j).show();
+                            }
+                                //covers.addAll(chessPieces.get(j).getNextCovers(getSidePoints(chessPieces, turn), getSidePoints(chessPieces, oppositeTurn(turn))));
+       
+                        }
+                        
+                        if(isPointClear && checkCheck(chessPieces, turn)){
+                            subPoints.remove(i);
+                        }
+                        
+                        chessPieces.get(selectedPieceIndex).moveToPoint(originalPos);
+                    }
+
+                        // if(covers.contains(kingPos)){
+                        //     subPoints.remove(i);
+                        // }
+                        // chessPieces.get(selectedPieceIndex).moveToPoint(originalPos);
+                    
+                }
 
                 if(!selectorIsHidden){
                     for(Point subP: subPoints){

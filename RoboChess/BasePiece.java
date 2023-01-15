@@ -13,6 +13,8 @@ public class BasePiece extends RobotSE{
     }
 
     protected boolean eliminated;
+    protected boolean isPositionFake;
+    protected final Point fakePosition;
     protected int moves;
     protected Side side;
     protected Color color;
@@ -25,6 +27,8 @@ public class BasePiece extends RobotSE{
         originalDir = direction;
         moves = 0;
         eliminated = false;
+        isPositionFake = false;
+        fakePosition = new Point(64, 24);
     }
 
     // Sets up a null BasePiece (this constructor should not be used)
@@ -32,6 +36,8 @@ public class BasePiece extends RobotSE{
         super(null, 0, 0, null);
         moves = -1;
         eliminated = true;
+        isPositionFake = false;
+        fakePosition = new Point(64, 24);
     }
 
     public int getMoves(){
@@ -50,6 +56,13 @@ public class BasePiece extends RobotSE{
 
     // Returns a 2 element array in the form [x, y]
     public Point getPos(){
+
+        // Returns a fake position
+        // Used to determine other piece's positions without moving the current
+        if(isPositionFake){
+            return fakePosition;
+        }
+
         return new Point(getAvenue(), getStreet());
     }
 
@@ -66,6 +79,7 @@ public class BasePiece extends RobotSE{
         }
     }
 
+    // Turns the piece to face a specific direction regardless of current direction
     public void faceTo(Direction dir){
         int turns = resolveDirection(getDirection()) - resolveDirection(dir);
         if(turns > 0){
@@ -76,6 +90,12 @@ public class BasePiece extends RobotSE{
     }
 
     public void moveTo(Point p){
+        moveToPoint(p);
+        incrementMoves();
+    }
+
+    public void moveToPoint(Point p){
+        setTransparency(1.0d);
         if(p.x > getPos().x){
             faceTo(Direction.EAST);
         }else if(p.x < getPos().x){
@@ -91,14 +111,25 @@ public class BasePiece extends RobotSE{
         }
         move(Math.abs(getPos().y - p.y));
         faceTo(originalDir);
-
-        incrementMoves();
+        setTransparency(0.0d);
         
     }
 
     public void eliminate(){
         eliminated = true;
-        moveTo(new Point(64, 64));
+        moveTo(new Point(64, 24));
+    }
+
+    public void hide(){
+        isPositionFake = true;
+    }
+
+    public void show(){
+        isPositionFake = false;
+    }
+
+    public boolean isShown(){
+        return isPositionFake;
     }
 
     public ArrayList<Point> getNextPositions(ArrayList<Point> currentSide, ArrayList<Point> oppositeSide){
