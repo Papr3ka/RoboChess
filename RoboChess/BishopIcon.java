@@ -11,6 +11,8 @@ public class BishopIcon extends ShapeIcon
      public BishopIcon(Color color, double relativeSize)
      {  super(BishopIcon.shape, color, relativeSize);
          //kk
+         //sdas
+         //sdad
      }
 
      private static GeneralPath shape;
