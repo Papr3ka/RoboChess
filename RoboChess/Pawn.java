@@ -8,7 +8,7 @@ public class Pawn extends BasePiece{
 
     public Pawn(Board chessBoard, int x, int y, Side side_){
         
-        super(chessBoard, x, y, side_ == Side.White ? Direction.NORTH : Direction.SOUTH);
+        super(chessBoard, x, y, Direction.NORTH);
         side = side_;
         if(side == Side.White){
             color = Color.WHITE;
