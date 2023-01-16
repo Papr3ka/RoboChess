@@ -17,7 +17,7 @@ public class Board extends City{
     private Rectangle2D shapeConst;
 
     public Board(Color colorWhite_, Color colorBlack_){
-        super(8, 8); // 8x8 chess board, indexes from 0-7
+        super(0, 0, 8, 12, 96); // 8x8 chess board, indexes from 0-7, 8x4 for eliminated pieces
         setFrameTitle("RoboChess");
 
         // Code here seems a bit sus (unsafe)
@@ -27,6 +27,13 @@ public class Board extends City{
         colorBlack = colorBlack_;
 
         shapeConst = new Rectangle2D.Double(0.0, 0.0, 1.0, 1.0);
+
+        for(int x = -32; x < 96; x++){
+            for(int y = -32; y < 96; y++){
+                this.getIntersection(y, x).setIcon(new ShapeIcon(shapeConst, colorWhite));
+            }
+        }
+
 
         // Create the pattern
         refreshBoard();
@@ -56,11 +63,7 @@ public class Board extends City{
 
     // Sets a specific intersection to a specific color
     public void selectBoard(int x, int y, Color color){
-        selectBoard(x, y, color, false);
-    }
-    public void selectBoard(int x, int y, Color color, boolean blinking){
-        Color darkerColor = color.darker();
-        this.getIntersection(y, x).setIcon(new CompositeIcon(new ShapeIcon(shapeConst, darkerColor), new ShapeIcon(shapeConst, color, 0.9)));
+        this.getIntersection(y, x).setIcon(new CompositeIcon(new ShapeIcon(shapeConst, color.darker()), new ShapeIcon(shapeConst, color, 0.9)));
     }
 
 }

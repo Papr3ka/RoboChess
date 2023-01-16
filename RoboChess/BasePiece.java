@@ -128,6 +128,7 @@ public class BasePiece extends RobotSE{
 
     public void eliminate(){
         eliminated = true;
+        setTransparency(1.0d);
         moveTo(new Point(64, 24));
     }
 
