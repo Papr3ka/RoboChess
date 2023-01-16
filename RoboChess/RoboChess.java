@@ -20,7 +20,6 @@ class RoboChess {
         }
     }
 
-
     public static ArrayList<BasePiece> initializeBoard(Board board){
         ArrayList<BasePiece> pieces = new ArrayList<BasePiece>();
 
@@ -233,44 +232,49 @@ class RoboChess {
 
     public static void main(String[] args){
         // Initialize Chess Board
-        Board chessBoard = new Board(new Color(234, 233, 210, 255), new Color(75, 115, 153, 255));
+        Board chessBoard                 = new Board(new Color(234, 233, 210, 255), new Color(75, 115, 153, 255));
         ArrayList<BasePiece> chessPieces = initializeBoard(chessBoard); // Polymorphism
 
         // Initialize KeyListener
         KeyListener keyListener = new KeyListener(chessBoard);
-        int keyPress = 0; // Converts char to int
+        int keyPress            = 0; // Converts char to int
 
         // Initialize Selector
-        Point selector = new Point(0, 7);
-        Point subSelector = selector;
+        Point selector           = new Point(0, 7); // Selector starting position
+        Point subSelector        = selector;
         boolean selectorIsHidden = false;
 
         // Initialize Colors
-        Color selectionColor = new Color(245, 118, 26, 255);
+        Color selectionColor    = new Color(245, 118, 26, 255);
         Color subSelectionColor = new Color(255, 168, 54, 255);
-        Color optionsColor = new Color(141, 182, 0, 255);
+        Color optionsColor      = new Color(141, 182, 0, 255);
+        Color invalidColor      = new Color(210, 31, 60, 255);
 
         // Initialize gamestates (turn, checkmate)
         BasePiece.Side turn = BasePiece.Side.White; // White first
-        boolean checkMate = false;
-        boolean check = false;
+        boolean checkMate   = false;
 
         // Other variables
-        ArrayList<Point> covers = new ArrayList<Point>();
-        ArrayList<Point> subPoints = new ArrayList<Point>();
-        int selectedPieceIndex = -1;
-        boolean inSubState = false;
-        boolean isPieceLocked = false;
-        boolean isPointClear = true;
+        ArrayList<Point> covers           = new ArrayList<Point>();
+        ArrayList<Point> subPoints        = new ArrayList<Point>();
+        ArrayList<Point> invalidSubPoints = new ArrayList<Point>();
+        int selectedPieceIndex            = -1;
+        boolean inSubState                = false;
+        boolean isPointClear              = true;
         Point originalPos;
-        Point tempPos;
-        Point kingPos = new Point(64, 64);
+        
 
         // Main loop
         while(!checkMate){
             chessBoard.refreshBoard();
             if(!selectorIsHidden){
                 chessBoard.selectBoard(selector.x, selector.y, selectionColor);
+            }
+
+            if(turn == BasePiece.Side.White){
+                chessBoard.setFrameTitle("RoboChess: White Turn");
+            }else{
+                chessBoard.setFrameTitle("RoboChess: Black Turn");
             }
 
             covers.clear();
@@ -337,7 +341,7 @@ class RoboChess {
             }
 
             // Enter substate
-            inSubState = true;
+            inSubState  = true;
             subSelector = selector;
 
             // Wait for user to select option
@@ -345,13 +349,14 @@ class RoboChess {
 
                 // Gets the next positions in which the piece can move to
                 subPoints = chessPieces.get(selectedPieceIndex).getNextPositions(getSidePoints(chessPieces, turn), getSidePoints(chessPieces, oppositeTurn(turn)));
+                invalidSubPoints.clear();
 
                 covers.clear();
                 originalPos = chessPieces.get(selectedPieceIndex).getPos();
                 
                 // Ensure invalid moves cannot be made involving the king
                 if(chessPieces.get(selectedPieceIndex) instanceof King){
-
+                    chessPieces.get(selectedPieceIndex).tempModeOn();
                     // Remove all the points that would put the king in check
                     chessPieces.get(selectedPieceIndex).hide(); // Hide the king from other pieces
                     for(int i = 0; i < chessPieces.size(); i++){
@@ -362,26 +367,15 @@ class RoboChess {
                     chessPieces.get(selectedPieceIndex).show();
                     for(int i = subPoints.size() - 1; i >= 0; i--){
                         if(covers.contains(subPoints.get(i))){
+                            invalidSubPoints.add(subPoints.get(i));
                             subPoints.remove(i);
                         }
                     }
+                    chessPieces.get(selectedPieceIndex).tempModeOff();
 
-                    //if(subPoints.size() == 0 &&)
-
-                    // for(int i = subPoints.size() - 1; i >= 0; i--){
-                    //     chessPieces.get(selectedPieceIndex).moveToPoint(subPoints.get(i));
-                    //     for(int j = 0; j < chessPieces.size(); j++){
-                    //         if(chessPieces.get(j).getSide() == oppositeTurn(turn)){
-                    //             covers.addAll(chessPieces.get(j).getNextCovers(getSidePoints(chessPieces, turn), getSidePoints(chessPieces, oppositeTurn(turn))));
-                    //         }
-                    //     }
-                    //     if(covers.contains(chessPieces.get(selectedPieceIndex).getPos())){
-                    //         subPoints.remove(i);
-                    //     }
-                    //     chessPieces.get(selectedPieceIndex).moveToPoint(originalPos);
-                    // }
                 }else{
 
+                    chessPieces.get(selectedPieceIndex).tempModeOn();
                     for(int i = subPoints.size() - 1; i >= 0; i--){
                         chessPieces.get(selectedPieceIndex).moveToPoint(subPoints.get(i));
                         isPointClear = true;
@@ -391,31 +385,30 @@ class RoboChess {
                                 chessPieces.get(j).hide();
                                 if(checkCheck(chessPieces, turn)){
                                     chessPieces.get(j).show();
+                                    invalidSubPoints.add(subPoints.get(i));
                                     subPoints.remove(i);
                                     break;
 
                                 }
                                 chessPieces.get(j).show();
                             }
-                                //covers.addAll(chessPieces.get(j).getNextCovers(getSidePoints(chessPieces, turn), getSidePoints(chessPieces, oppositeTurn(turn))));
        
                         }
                         
                         if(isPointClear && checkCheck(chessPieces, turn)){
+                            invalidSubPoints.add(subPoints.get(i));
                             subPoints.remove(i);
                         }
                         
                         chessPieces.get(selectedPieceIndex).moveToPoint(originalPos);
                     }
-
-                        // if(covers.contains(kingPos)){
-                        //     subPoints.remove(i);
-                        // }
-                        // chessPieces.get(selectedPieceIndex).moveToPoint(originalPos);
-                    
+                    chessPieces.get(selectedPieceIndex).tempModeOff();           
                 }
 
                 if(!selectorIsHidden){
+                    for(Point iSubP: invalidSubPoints){
+                        chessBoard.selectBoard(iSubP.x, iSubP.y, invalidColor);
+                    }
                     for(Point subP: subPoints){
                         chessBoard.selectBoard(subP.x, subP.y, optionsColor);
                     }
@@ -448,8 +441,11 @@ class RoboChess {
                         break;
     
                     case 10: // Enter
+                        if(subSelector.equals(selector)){
+                            break;
+                        }
+
                         // Move piece here
-            
                         chessPieces.get(selectedPieceIndex).moveTo(subSelector);
 
                         // eliminate piece

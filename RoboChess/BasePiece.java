@@ -20,6 +20,9 @@ public class BasePiece extends RobotSE{
     protected Color color;
 
     private Direction originalDir;
+    private Point tempPoint;
+    private boolean useTempPoint;
+
 
     public BasePiece(Board chessBoard, int x, int y, Direction direction){
         super(chessBoard.getState()[0], y, x, direction);
@@ -29,6 +32,7 @@ public class BasePiece extends RobotSE{
         eliminated = false;
         isPositionFake = false;
         fakePosition = new Point(64, 24);
+        tempPoint = new Point(x, y);
     }
 
     // Sets up a null BasePiece (this constructor should not be used)
@@ -38,6 +42,7 @@ public class BasePiece extends RobotSE{
         eliminated = true;
         isPositionFake = false;
         fakePosition = new Point(64, 24);
+        tempPoint = fakePosition;
     }
 
     public int getMoves(){
@@ -57,8 +62,12 @@ public class BasePiece extends RobotSE{
     // Returns a 2 element array in the form [x, y]
     public Point getPos(){
 
+        if(useTempPoint){
+            return tempPoint;
+        }
         // Returns a fake position
         // Used to determine other piece's positions without moving the current
+        // Basicall used to hide the piece's position without removing it
         if(isPositionFake){
             return fakePosition;
         }
@@ -95,6 +104,11 @@ public class BasePiece extends RobotSE{
     }
 
     public void moveToPoint(Point p){
+        if(useTempPoint){
+            tempPoint = p;
+            return;
+        }
+
         setTransparency(1.0d);
         if(p.x > getPos().x){
             faceTo(Direction.EAST);
@@ -130,6 +144,14 @@ public class BasePiece extends RobotSE{
 
     public boolean isShown(){
         return isPositionFake;
+    }
+
+    public void tempModeOn(){
+        useTempPoint = true;
+    }
+
+    public void tempModeOff(){
+        useTempPoint = false;
     }
 
     public ArrayList<Point> getNextPositions(ArrayList<Point> currentSide, ArrayList<Point> oppositeSide){
