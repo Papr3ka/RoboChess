@@ -17,33 +17,33 @@ public class KingIcon extends ShapeIcon
      static
      {  shape = new GeneralPath();
         
-        shape.moveTo(0.5F, 0.2F);
-        shape.lineTo(0.6F, 0.1F);
-        shape.lineTo(0.5F, 0.0F);
-        shape.lineTo(0.4F, 0.1F);
-        shape.lineTo(0.5F, 0.2F);
+        shape.moveTo(0.5F, 0.3F);
         
-     
-        shape.lineTo(0.4F, 0.35F);
-        shape.lineTo(0.2F, 0.2F);
-        shape.lineTo(0.2F, 0.45F);
-        shape.lineTo(0.0F, 0.35F);
-        shape.lineTo(0.2F, 0.8F);
+        
+        shape.lineTo(0.6F, 0.2F);
+        shape.lineTo(0.5F, 0.1F);
+        shape.lineTo(0.4F, 0.2F);
+        shape.lineTo(0.5F, 0.3F);
+        
+        shape.lineTo(0.3F, 0.25F);
+        shape.lineTo(0.1F, 0.3F);
+        shape.lineTo(0.0F, 0.5F);
         shape.lineTo(0.1F, 0.8F);
+        
         shape.lineTo(0.2F, 0.9F);
         shape.lineTo(0.1F, 0.9F);
         shape.lineTo(0.0F, 1.0F);
         shape.lineTo(1.0F, 1.0F);
-        shape.lineTo(0.9F, 0.9F);
         
+        shape.lineTo(0.9F, 0.9F);
         shape.lineTo(0.8F, 0.9F);
         shape.lineTo(0.9F, 0.8F);
-        shape.lineTo(0.8F, 0.8F);
-        shape.lineTo(1.0F, 0.35F);
-        shape.lineTo(0.8F, 0.45F);
-        shape.lineTo(0.8F, 0.2F);
-        shape.lineTo(0.6F, 0.35F);
-        shape.moveTo(0.5F, 0.2F);
+        shape.lineTo(1.0F, 0.5F);
+        
+        shape.lineTo(0.9F, 0.3F);
+        shape.lineTo(0.7F, 0.25F);
+        shape.lineTo(0.5F, 0.3F);
+     
         shape.closePath();
 
         
@@ -51,3 +51,4 @@ public class KingIcon extends ShapeIcon
 
      }
   }
+
