@@ -109,7 +109,6 @@ public class BasePiece extends RobotSE{
             return;
         }
 
-        setTransparency(1.0d);
         if(p.x > getPos().x){
             faceTo(Direction.EAST);
         }else if(p.x < getPos().x){
@@ -124,9 +123,7 @@ public class BasePiece extends RobotSE{
             faceTo(Direction.NORTH);
         }
         move(Math.abs(getPos().y - p.y));
-        faceTo(originalDir);
-        setTransparency(0.0d);
-        
+        faceTo(originalDir);        
     }
 
     public void eliminate(){
