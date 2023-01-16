@@ -56,8 +56,11 @@ public class Board extends City{
 
     // Sets a specific intersection to a specific color
     public void selectBoard(int x, int y, Color color){
-        this.getIntersection(y, x).setIcon(new ShapeIcon(shapeConst, color));
-        
+        selectBoard(x, y, color, false);
+    }
+    public void selectBoard(int x, int y, Color color, boolean blinking){
+        Color darkerColor = color.darker();
+        this.getIntersection(y, x).setIcon(new CompositeIcon(new ShapeIcon(shapeConst, darkerColor), new ShapeIcon(shapeConst, color, 0.9)));
     }
 
 }
