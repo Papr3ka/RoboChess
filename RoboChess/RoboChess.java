@@ -458,7 +458,15 @@ class RoboChess {
                             break;
                         }
                     }
-
+                    for(int i = 0; i < chessPieces.size(); i++){
+                        if(chessPieces.get(i).getSide() == turn &&
+                           chessPieces.get(i) instanceof Rook &&
+                           chessPieces.get(i).getPos().x <= 4 &&
+                           chessPieces.get(i).getMoves() > 0){
+                            canCastle = false;
+                            break;
+                           }
+                    }
                     if(canCastle){
                         chessPieces.get(selectedPieceIndex).moveToPoint(new Point(2, chessPieces.get(selectedPieceIndex).getPos().y));
                         if(!checkCheck(chessPieces, turn)){
@@ -475,7 +483,15 @@ class RoboChess {
                             break;
                         }
                     }
-
+                    for(int i = 0; i < chessPieces.size(); i++){
+                        if(chessPieces.get(i).getSide() == turn &&
+                           chessPieces.get(i) instanceof Rook &&
+                           chessPieces.get(i).getPos().x >= 5 &&
+                           chessPieces.get(i).getMoves() > 0){
+                            canCastle = false;
+                            break;
+                           }
+                    }
                     if(canCastle){
                         chessPieces.get(selectedPieceIndex).moveToPoint(new Point(6, chessPieces.get(selectedPieceIndex).getPos().y));
                         if(!checkCheck(chessPieces, turn)){

@@ -17,7 +17,7 @@ public class Board extends City{
     private Rectangle2D shapeConst;
 
     public Board(Color colorWhite_, Color colorBlack_){
-        super(0, 0, 8, 12, 96); // 8x8 chess board, indexes from 0-7, 8x4 for eliminated pieces
+        super(0, 0, 8, 12, 86); // 8x8 chess board, indexes from 0-7, 8x4 for eliminated pieces
         setFrameTitle("RoboChess");
 
         // Code here seems a bit sus (unsafe)
