@@ -124,6 +124,18 @@ class RoboChess {
         return idx;
     }
 
+    public static Point getPiecePos(ArrayList<BasePiece> chessPieces, Class<?> piece, BasePiece.Side side){
+        Point pPoint = new Point(64, 24);
+        for(BasePiece p: chessPieces){
+            if(p.getClass() == piece && p.getSide() == side){
+                pPoint = p.getPos();
+                break;
+            }
+        }
+
+        return pPoint;
+    }
+
     // Finds the closest point in the corresponding direction
     public static Point moveNextPoint(Point current, ArrayList<Point> options, Direction direction){
 
@@ -249,10 +261,13 @@ class RoboChess {
         Color subSelectionColor = new Color(255, 168, 54, 255);
         Color optionsColor      = new Color(141, 182, 0, 255);
         Color invalidColor      = new Color(210, 31, 60, 255);
+        Color specialColor      = new Color(153, 102, 204, 255);
 
         // Initialize gamestates (turn, checkmate)
         BasePiece.Side turn = BasePiece.Side.White; // White first
         boolean checkMate   = false;
+        boolean staleMate   = false;
+        int teamMovablePieces;
 
         // Other variables
         ArrayList<Point> covers           = new ArrayList<Point>();
@@ -262,10 +277,14 @@ class RoboChess {
         boolean inSubState                = false;
         boolean isPointClear              = true;
         Point originalPos;
+        Point kingPos;
+        Point elimNextClearWhite          = new Point(8, 7);
+        Point elimNextClearBlack          = new Point(11, 0);
+
         
 
         // Main loop
-        while(!checkMate){
+        while(!checkMate && !staleMate){
             chessBoard.refreshBoard();
             if(!selectorIsHidden){
                 chessBoard.selectBoard(selector.x, selector.y, selectionColor);
@@ -375,6 +394,8 @@ class RoboChess {
 
                 }else{
 
+                    // Check for other moves that could put the king in check
+                    // Check for moves that are allowed if the king is in check
                     chessPieces.get(selectedPieceIndex).tempModeOn();
                     for(int i = subPoints.size() - 1; i >= 0; i--){
                         chessPieces.get(selectedPieceIndex).moveToPoint(subPoints.get(i));
@@ -451,8 +472,22 @@ class RoboChess {
                         // eliminate piece
                         for(int i = chessPieces.size() - 1; i >= 0; i--){
                             if(chessPieces.get(i).getPos().equals(subSelector) && chessPieces.get(i).getSide() == oppositeTurn(turn)){
-                                chessPieces.get(i).eliminate();
-                                chessPieces.remove(i);
+                                if(chessPieces.get(i).getSide() == BasePiece.Side.Black){
+                                    chessPieces.get(i).eliminate(elimNextClearBlack);
+                                    elimNextClearBlack.y++;
+                                    if(elimNextClearBlack.y > 7){
+                                        elimNextClearBlack.y = 0;
+                                        elimNextClearBlack.x--;
+                                    }
+                                }else{
+                                    chessPieces.get(i).eliminate(elimNextClearWhite);
+                                    elimNextClearWhite.y--;
+                                    if(elimNextClearWhite.y < 0){
+                                        elimNextClearWhite.y = 7;
+                                        elimNextClearWhite.x++;
+                                    }
+                                }
+                                //chessPieces.remove(i);
                                 break;
                             }
                         }
@@ -480,17 +515,74 @@ class RoboChess {
 
             }
 
-            // Verify selected option (Will it put its own king in check? etc...)
+            // Check for checkmate
+            teamMovablePieces = 0;
+            for(int idx = 0; idx < chessPieces.size(); idx++){
+                if(chessPieces.get(idx).getSide() == turn){
+                  
+                    subPoints = chessPieces.get(idx).getNextPositions(getSidePoints(chessPieces, turn), getSidePoints(chessPieces, oppositeTurn(turn)));
+                    originalPos = chessPieces.get(idx).getPos();
+                    for(int i = subPoints.size() - 1; i >= 0; i--){
+                        chessPieces.get(idx).tempModeOn();
+                        chessPieces.get(idx).moveToPoint(subPoints.get(i));
+                        isPointClear = true;
+                        for(int j = 0; j < chessPieces.size(); j++){
+                            if(chessPieces.get(j).getPos().equals(subPoints.get(i)) && chessPieces.get(j).getSide() == oppositeTurn(turn)){
+                                isPointClear = false;
+                                chessPieces.get(j).hide();
+                                if(checkCheck(chessPieces, turn)){
+                                    chessPieces.get(j).show();
+                                    subPoints.remove(i);
+                                    break;
 
-                // If invalid, restart from same player
+                                }
+                                chessPieces.get(j).show();
+                            }
+        
+                        }
+                        
+                        if(isPointClear && checkCheck(chessPieces, turn)){
+                            subPoints.remove(i);
+                        }
+                        
+                        chessPieces.get(idx).moveToPoint(originalPos);
+                        chessPieces.get(idx).tempModeOff();
+                    }
 
-                // If valid, execute option, change turn
+                    if(subPoints.size() > 0){
+                        teamMovablePieces++;
+                    }
+                }
+            }
 
-            // Check gamestate (check for checkmate, stalemate)
+            if(teamMovablePieces == 0){
+                if(checkCheck(chessPieces, turn)){
+                    checkMate = true;
+                }else{
+                    staleMate = true;
+                }
+            }
 
             // Loop End measures
             selectedPieceIndex = -1;
         }
 
-    }    
+        // Game end
+        chessBoard.refreshBoard();
+
+        if(checkMate){
+            kingPos = getPiecePos(chessPieces, King.class, turn);
+            chessBoard.selectBoard(kingPos.x, kingPos.y, invalidColor);
+            if(turn == BasePiece.Side.Black){
+                chessBoard.setFrameTitle("RoboChess: White Wins!");
+            }else{
+                chessBoard.setFrameTitle("RoboChess: Black Wins!");
+            }
+        }
+
+        if(staleMate){
+            chessBoard.setFrameTitle("RoboChess: Stalemate!");
+        }
+    }
+
 }

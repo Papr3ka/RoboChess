@@ -23,6 +23,9 @@ public class King extends BasePiece{
         ArrayList<Point> nextPotentialPositions = getNextCovers(currentSide, oppositeSide);
         ArrayList<Point> nextPositions = new ArrayList<Point>();
 
+        if(eliminated){
+            return nextPositions;
+        }
         // 
 
         for(Point p: nextPotentialPositions){
@@ -37,6 +40,10 @@ public class King extends BasePiece{
     public ArrayList<Point> getNextCovers(ArrayList<Point> currentSide, ArrayList<Point> oppositeSide){
         ArrayList<Point> nextPotentialCovers = new ArrayList<Point>();
         ArrayList<Point> nextCovers = new ArrayList<Point>();
+
+        if(eliminated){
+            return nextCovers;
+        }
 
         Point testPoint;
         for(int i = -1; i <= 1; i++){

@@ -23,6 +23,9 @@ public class Rook extends BasePiece{
         ArrayList<Point> nextPotentialPositions = getNextCovers(currentSide, oppositeSide);
         ArrayList<Point> nextPositions = new ArrayList<Point>();
 
+        if(eliminated){
+            return nextPositions;
+        }
         // 
 
         for(Point p: nextPotentialPositions){
@@ -38,6 +41,9 @@ public class Rook extends BasePiece{
         ArrayList<Point> nextPotentialCovers = new ArrayList<Point>();
         ArrayList<Point> nextCovers = new ArrayList<Point>();
 
+        if(eliminated){
+            return nextCovers;
+        }
         // 
         Point testPoint = getPos();
         for(int i = 1; i < 8; i++){

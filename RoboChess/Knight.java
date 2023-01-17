@@ -23,6 +23,10 @@ public class Knight extends BasePiece{
         ArrayList<Point> nextPositions = new ArrayList<Point>();
         ArrayList<Point> nextPotentialPositions = getNextCovers(currentSide, oppositeSide);
         
+        if(eliminated){
+            return nextPositions;
+        }
+
         for(Point p: nextPotentialPositions){
             if(!currentSide.contains(p)){
                 nextPositions.add(p);
@@ -36,6 +40,10 @@ public class Knight extends BasePiece{
     public ArrayList<Point> getNextCovers(ArrayList<Point> currentSide, ArrayList<Point> oppositeSide){
         ArrayList<Point> nextPotentialCovers = new ArrayList<Point>();
         ArrayList<Point> nextCovers = new ArrayList<Point>();
+
+        if(eliminated){
+            return nextCovers;
+        }
 
         Point testPoint;
         testPoint = getPos();

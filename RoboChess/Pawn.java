@@ -23,6 +23,10 @@ public class Pawn extends BasePiece{
     public ArrayList<Point> getNextPositions(ArrayList<Point> currentSide, ArrayList<Point> oppositeSide){
         ArrayList<Point> nextPositions = new ArrayList<Point>();
         
+        if(eliminated){
+            return nextPositions;
+        }
+
         int yDirection = 1;
         if(side == Side.White){
             yDirection = -1;
@@ -61,6 +65,10 @@ public class Pawn extends BasePiece{
     public ArrayList<Point> getNextCovers(ArrayList<Point> currentSide, ArrayList<Point> oppositeSide){
         ArrayList<Point> nextPotentialCovers = new ArrayList<Point>();
         ArrayList<Point> nextCovers = new ArrayList<Point>();
+
+        if(eliminated){
+            return nextCovers;
+        }
 
         int yDirection = 1;
         if(side == Side.White){
