@@ -6,8 +6,10 @@ import becker.robots.*;
 
 public class Pawn extends BasePiece{
 
+    private boolean canEnPassant;
+
+
     public Pawn(Board chessBoard, int x, int y, Side side_){
-        
         super(chessBoard, x, y, Direction.NORTH);
         side = side_;
         if(side == Side.White){
@@ -17,7 +19,30 @@ public class Pawn extends BasePiece{
         }
         setIcon(new PawnIcon(color));
         setColor(color);
+
+        canEnPassant = true;
     }
+
+    public Boolean canEnPassant(){
+        return canEnPassant;
+    }
+
+    public void updateMoved(){
+        canEnPassant = false;
+    }
+
+    @Override
+    public void moveTo(Point p){
+        if(Math.abs(p.y - getPos().y) == 2){
+            canEnPassant = true;
+        }else{
+            canEnPassant = false;
+        }
+        
+        moveToPoint(p);
+        moves++;
+    }
+
 
     // Positions in which the pawn can move to
     public ArrayList<Point> getNextPositions(ArrayList<Point> currentSide, ArrayList<Point> oppositeSide){
@@ -35,9 +60,19 @@ public class Pawn extends BasePiece{
         Point pRight = getPos();
         Point pLeft = getPos();
 
+        // pRight.translate(1, 0);
+        // pLeft.translate(-1, 0);
+        // // En Passant
+        // if(oppositeSide.contains(pRight)){
+        //     nextPositions.add(new Point(pRight.x, pRight.y + yDirection));
+        // }
+
+        // if(oppositeSide.contains(pLeft)){
+        //     nextPositions.add(new Point(pLeft.x, pLeft.y + yDirection));
+        // }
+
         pRight.translate(1, yDirection);
         pLeft.translate(-1, yDirection);
-        
         if(oppositeSide.contains(pRight)){
             nextPositions.add(pRight);
         }
@@ -55,6 +90,12 @@ public class Pawn extends BasePiece{
             nextPositions.add(pNext);
             if(!(currentSide.contains(pNext2) || oppositeSide.contains(pNext2)) && getMoves() == 0){
                 nextPositions.add(pNext2);
+            }
+        }
+
+        for(int i = nextPositions.size() - 1; i >= 0; i--){
+            if(!checkLimits(nextPositions.get(i))){
+                nextPositions.remove(i);
             }
         }
 

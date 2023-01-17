@@ -2,9 +2,9 @@ import java.awt.Color;
 import java.awt.Point;
 import java.lang.Math;
 import java.util.ArrayList;
+import java.util.Random;
 
-import becker.robots.Direction;
-import becker.robots.RobotSE;
+import becker.robots.*;
 
 public class BasePiece extends RobotSE{
 
@@ -22,6 +22,7 @@ public class BasePiece extends RobotSE{
     private Direction originalDir;
     private Point tempPoint;
     private boolean useTempPoint;
+    private int id;
 
 
     public BasePiece(Board chessBoard, int x, int y, Direction direction){
@@ -33,16 +34,18 @@ public class BasePiece extends RobotSE{
         isPositionFake = false;
         fakePosition = new Point(64, 24);
         tempPoint = new Point(x, y);
+        id = (new Random()).nextInt() + x + y*8;
     }
 
     // Sets up a null BasePiece (this constructor should not be used)
-    public BasePiece(){
-        super(null, 0, 0, null);
+    public BasePiece(City c){
+        super(c, 64, 24, Direction.NORTH);
         moves = -1;
         eliminated = true;
         isPositionFake = false;
         fakePosition = new Point(64, 24);
         tempPoint = fakePosition;
+        setTransparency(1.0d);
     }
 
     public int getMoves(){
@@ -164,6 +167,10 @@ public class BasePiece extends RobotSE{
         ArrayList<Point> current = new ArrayList<Point>();
         current.add(getPos());
         return current;
+    }
+
+    public int getId(){
+        return id;
     }
 
     // Checks if a position is within bounds of the chess board
