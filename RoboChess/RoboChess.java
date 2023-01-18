@@ -351,9 +351,8 @@ class RoboChess {
             // NOT case sensitive
             // WASD - Moves the selector around
             // H - toggles the selector
-            //
-            //
-            //
+            // Enter - make a selection
+            // Escape - exit a submenu
             switch (keyPress) {
                 case 87:
                 case 119: // W w
@@ -757,6 +756,7 @@ class RoboChess {
                             chessBoard.selectBoard(selector.x, selector.y, selectionColor);
                         }
                         selector = subSelector;
+                        turnCount++;
                         break;
 
                     case 27: // ESCape key
@@ -851,7 +851,6 @@ class RoboChess {
 
             // Loop End measures
             selectedPieceIndex = -1;
-            turnCount++;
         }
 
         // Game end
