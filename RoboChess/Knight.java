@@ -19,6 +19,25 @@ public class Knight extends BasePiece{
         setColor(color);
     }
 
+    public Knight(Board chessBoard, BasePiece piece){
+        
+        super(chessBoard, piece.getPos().x, piece.getPos().y, Direction.NORTH);
+        side = piece.getSide();
+        if(side == Side.White){
+            color = Color.WHITE;
+        }else{
+            color = Color.BLACK;
+        }
+
+        moves = piece.getMoves();
+        
+        setIcon(new KnightIcon(color));
+        setColor(color);
+
+        piece.eliminate(new Point(64, 24));
+        piece.setTransparency(1.0d);
+    }
+
     public ArrayList<Point> getNextPositions(ArrayList<Point> currentSide, ArrayList<Point> oppositeSide){
         ArrayList<Point> nextPositions = new ArrayList<Point>();
         ArrayList<Point> nextPotentialPositions = getNextCovers(currentSide, oppositeSide);

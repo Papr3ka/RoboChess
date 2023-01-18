@@ -573,6 +573,13 @@ class RoboChess {
                         
                         }
                     }
+
+                    // Pawn promotion
+                    for(int i = subPoints.size() - 1; i >= 0; i--){
+                        if(subPoints.get(i).y == 0 || subPoints.get(i).y == 7){
+                            specialPositions.add(subPoints.get(i));
+                        }
+                    }
                 }
 
                 // Display all the options available
@@ -625,6 +632,15 @@ class RoboChess {
                         mostRecentId = chessPieces.get(selectedPieceIndex).getId();
                         // Move piece here
                         chessPieces.get(selectedPieceIndex).moveTo(subSelector);
+
+                        // Pawn promotion
+                        if(chessPieces.get(selectedPieceIndex) instanceof Pawn &&
+                           (subSelector.y == 0 || subSelector.y == 7)){
+
+                            // Can be [Queen] Rook Bishop Knight
+                            chessPieces.add(new Queen(chessBoard, chessPieces.get(selectedPieceIndex)));
+                            chessPieces.remove(selectedPieceIndex);
+                        }
 
                         // Castling
                         if(chessPieces.get(selectedPieceIndex) instanceof King &&
