@@ -1,3 +1,13 @@
+/*
+ * RoboChess - Chess using robots
+ * Copyright (c) 2023 Benjamin Yao and Jack Hyun
+ * 
+ * This file is part of RoboChess
+ * 
+ * This file is a sub-class of BasePiece and contains all the
+ * necessary operations specific to the 'Knight' piece
+ */
+
 import java.util.ArrayList;
 import java.awt.Color;
 import java.awt.Point;

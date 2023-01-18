@@ -1,3 +1,15 @@
+/*
+ * RoboChess - Chess using robots
+ * Copyright (c) Benjamin Yao and Jack Hyun
+ * 
+ * This file is part of RoboChess
+ * 
+ * This file is a sub-class of 'RobotSE' and contains all the
+ * necessary operations for the pieces to work including all
+ * their attributes and methods involving points of interaction
+ * 
+ */
+
 import java.awt.Color;
 import java.awt.Point;
 import java.lang.Math;
@@ -6,15 +18,15 @@ import java.util.Random;
 
 import becker.robots.*;
 
-public class BasePiece extends RobotSE{
+public class BasePiece extends RobotSE {
 
-    public enum Side{
+    public enum Side {
         White, Black
     }
 
     protected boolean eliminated;
     protected boolean isPositionFake;
-    protected final Point fakePosition;
+    protected Point fakePosition;
     protected int moves;
     protected Side side;
     protected Color color;
@@ -24,8 +36,7 @@ public class BasePiece extends RobotSE{
     private boolean useTempPoint;
     private int id;
 
-
-    public BasePiece(Board chessBoard, int x, int y, Direction direction){
+    public BasePiece(Board chessBoard, int x, int y, Direction direction) {
         super(chessBoard.getState()[0], y, x, direction);
         setSpeed(1024.0);
         originalDir = direction;
@@ -34,11 +45,11 @@ public class BasePiece extends RobotSE{
         isPositionFake = false;
         fakePosition = new Point(64, 24);
         tempPoint = new Point(x, y);
-        id = (new Random()).nextInt() + x + y*8;
+        id = (new Random()).nextInt() + x + y * 8;
     }
 
     // Sets up a null BasePiece (this constructor should not be used)
-    public BasePiece(City c){
+    public BasePiece(City c) {
         super(c, 64, 24, Direction.NORTH);
         moves = -1;
         eliminated = true;
@@ -48,30 +59,30 @@ public class BasePiece extends RobotSE{
         setTransparency(1.0d);
     }
 
-    public int getMoves(){
+    public int getMoves() {
         return moves;
     }
 
-    public void incrementMoves(){
-        if(moves >= 0){
+    public void incrementMoves() {
+        if (moves >= 0) {
             moves++;
         }
     }
 
-    public Side getSide(){
+    public Side getSide() {
         return side;
     }
 
     // Returns a 2 element array in the form [x, y]
-    public Point getPos(){
+    public Point getPos() {
 
-        if(useTempPoint){
+        if (useTempPoint) {
             return tempPoint;
         }
         // Returns a fake position
         // Used to determine other piece's positions without moving the current
         // Basicall used to hide the piece's position without removing it
-        if(isPositionFake){
+        if (isPositionFake) {
             return fakePosition;
         }
 
@@ -79,124 +90,124 @@ public class BasePiece extends RobotSE{
     }
 
     // Assigns a value to direction 0 1 2 3 for N E S W
-    public int resolveDirection(Direction dir){
-        if(dir == Direction.NORTH){
+    public int resolveDirection(Direction dir) {
+        if (dir == Direction.NORTH) {
             return 0;
-        }else if(dir == Direction.EAST){
+        } else if (dir == Direction.EAST) {
             return 1;
-        }else if(dir == Direction.SOUTH){
+        } else if (dir == Direction.SOUTH) {
             return 2;
-        }else{
+        } else {
             return 3;
         }
     }
 
     // Turns the piece to face a specific direction regardless of current direction
-    public void faceTo(Direction dir){
+    public void faceTo(Direction dir) {
         int turns = resolveDirection(getDirection()) - resolveDirection(dir);
-        if(turns > 0){
+        if (turns > 0) {
             turnLeft(turns);
-        }else{
+        } else {
             turnRight(-turns);
         }
     }
 
     // Moves to a point while incrementing the move counter
     // Used when an official move is made
-    public void moveTo(Point p){
+    public void moveTo(Point p) {
         moveToPoint(p);
         incrementMoves();
     }
 
     // Moves to a point without incrementing the move counter
     // Used for testing positions
-    public void moveToPoint(Point p){
-        if(useTempPoint){
+    public void moveToPoint(Point p) {
+        if (useTempPoint) {
             tempPoint = p;
             return;
         }
 
         setTransparency(1.0d);
-        if(p.x > getPos().x){
+        if (p.x > getPos().x) {
             faceTo(Direction.EAST);
-        }else if(p.x < getPos().x){
+        } else if (p.x < getPos().x) {
             faceTo(Direction.WEST);
         }
         // p.x == getPos().x
         move(Math.abs(getPos().x - p.x));
 
-        if(p.y > getPos().y){
+        if (p.y > getPos().y) {
             faceTo(Direction.SOUTH);
-        }else if(p.y < getPos().y){
+        } else if (p.y < getPos().y) {
             faceTo(Direction.NORTH);
         }
         move(Math.abs(getPos().y - p.y));
         faceTo(originalDir);
-        setTransparency(0.0d);    
+        setTransparency(0.0d);
     }
 
     // Move a piece outside of the board, eliminating it from the game
     // Makes the piece "inert"
-    public void eliminate(Point elimPoint){
+    public void eliminate(Point elimPoint) {
         eliminated = true;
         setTransparency(0.15d);
         moveTo(elimPoint);
     }
 
     // Used for testing piece positions
-    public void hide(){
+    public void hide() {
         isPositionFake = true;
     }
 
-     // Used for testing piece positions
-    public void show(){
+    // Used for testing piece positions
+    public void show() {
         isPositionFake = false;
     }
 
-    public boolean isShown(){
+    public boolean isShown() {
         return isPositionFake;
     }
 
     // Used for testing piece positions
-    public void tempModeOn(){
+    public void tempModeOn() {
         useTempPoint = true;
     }
 
     // Used for testing piece positions
-    public void tempModeOff(){
+    public void tempModeOff() {
         useTempPoint = false;
     }
 
     // Implemented in child classes
-    public ArrayList<Point> getNextPositions(ArrayList<Point> currentSide, ArrayList<Point> oppositeSide){
+    public ArrayList<Point> getNextPositions(ArrayList<Point> currentSide, ArrayList<Point> oppositeSide) {
         ArrayList<Point> current = new ArrayList<Point>();
         current.add(getPos());
         return current;
     }
 
     // Implemented in child classes
-    public ArrayList<Point> getNextCovers(ArrayList<Point> currentSide, ArrayList<Point> oppositeSide){
+    public ArrayList<Point> getNextCovers(ArrayList<Point> currentSide, ArrayList<Point> oppositeSide) {
         ArrayList<Point> current = new ArrayList<Point>();
         current.add(getPos());
         return current;
     }
 
     // Returns a special identification hash that each piece is given
-    public int getId(){
+    public int getId() {
         return id;
     }
 
-   // Checks if a position is within bounds of the chess board
-    public boolean checkLimits(Point p){
-        if((p.x >= 0) && (p.x < 8) && (p.y >= 0) && (p.y < 8)){
+    // Checks if a position is within bounds of the chess board
+    public boolean checkLimits(Point p) {
+        if ((p.x >= 0) && (p.x < 8) && (p.y >= 0) && (p.y < 8)) {
             return true;
         }
         return false;
     }
 
-   // Overload for checking with king
-    public boolean checkLimits(Point p, Point king){
-        if((p.x >= 0) && (p.x < 8) && (p.y >= 0) && (p.y < 8) && !p.equals(king)){
+    // Overload for checking with king
+    public boolean checkLimits(Point p, Point king) {
+        if ((p.x >= 0) && (p.x < 8) && (p.y >= 0) && (p.y < 8) && !p.equals(king)) {
             return true;
         }
         return false;

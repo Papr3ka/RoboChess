@@ -1,36 +1,46 @@
+/*
+ * RoboChess - Chess using robots
+ * Copyright (c) 2023 Benjamin Yao and Jack Hyun
+ * 
+ * This file is part of RoboChess
+ * 
+ * This file is a sub-class of BasePiece and contains all the
+ * necessary operations specific to the 'Rook' piece
+ */
+
 import java.util.ArrayList;
 import java.awt.Color;
 import java.awt.Point;
 
 import becker.robots.*;
 
-public class Rook extends BasePiece{
+public class Rook extends BasePiece {
 
-    public Rook(Board chessBoard, int x, int y, Side side_){
-        
+    public Rook(Board chessBoard, int x, int y, Side side_) {
+
         super(chessBoard, x, y, Direction.NORTH);
         side = side_;
-        if(side == Side.White){
+        if (side == Side.White) {
             color = Color.WHITE;
-        }else{
+        } else {
             color = Color.BLACK;
         }
         setIcon(new RookIcon(color));
         setColor(color);
     }
 
-    public Rook(Board chessBoard, BasePiece piece){
-        
+    public Rook(Board chessBoard, BasePiece piece) {
+
         super(chessBoard, piece.getPos().x, piece.getPos().y, Direction.NORTH);
         side = piece.getSide();
-        if(side == Side.White){
+        if (side == Side.White) {
             color = Color.WHITE;
-        }else{
+        } else {
             color = Color.BLACK;
         }
 
         moves = piece.getMoves();
-        
+
         setIcon(new RookIcon(color));
         setColor(color);
 
@@ -38,17 +48,17 @@ public class Rook extends BasePiece{
         piece.setTransparency(1.0d);
     }
 
-    public ArrayList<Point> getNextPositions(ArrayList<Point> currentSide, ArrayList<Point> oppositeSide){
+    public ArrayList<Point> getNextPositions(ArrayList<Point> currentSide, ArrayList<Point> oppositeSide) {
         ArrayList<Point> nextPotentialPositions = getNextCovers(currentSide, oppositeSide);
         ArrayList<Point> nextPositions = new ArrayList<Point>();
 
-        if(eliminated){
+        if (eliminated) {
             return nextPositions;
         }
-        // 
+        //
 
-        for(Point p: nextPotentialPositions){
-            if(!currentSide.contains(p)){
+        for (Point p : nextPotentialPositions) {
+            if (!currentSide.contains(p)) {
                 nextPositions.add(p);
             }
         }
@@ -56,50 +66,50 @@ public class Rook extends BasePiece{
         return nextPositions;
     }
 
-    public ArrayList<Point> getNextCovers(ArrayList<Point> currentSide, ArrayList<Point> oppositeSide){
+    public ArrayList<Point> getNextCovers(ArrayList<Point> currentSide, ArrayList<Point> oppositeSide) {
         ArrayList<Point> nextPotentialCovers = new ArrayList<Point>();
         ArrayList<Point> nextCovers = new ArrayList<Point>();
 
-        if(eliminated){
+        if (eliminated) {
             return nextCovers;
         }
-        // 
+        //
         Point testPoint = getPos();
-        for(int i = 1; i < 8; i++){
+        for (int i = 1; i < 8; i++) {
             testPoint = getPos();
             testPoint.translate(0, i);
             nextPotentialCovers.add(testPoint);
-            if(currentSide.contains(testPoint) || oppositeSide.contains(testPoint)){
+            if (currentSide.contains(testPoint) || oppositeSide.contains(testPoint)) {
                 break;
             }
         }
-        for(int i = 1; i < 8; i++){
+        for (int i = 1; i < 8; i++) {
             testPoint = getPos();
             testPoint.translate(i, 0);
             nextPotentialCovers.add(testPoint);
-            if(currentSide.contains(testPoint) || oppositeSide.contains(testPoint)){
+            if (currentSide.contains(testPoint) || oppositeSide.contains(testPoint)) {
                 break;
             }
         }
-        for(int i = 1; i < 8; i++){
+        for (int i = 1; i < 8; i++) {
             testPoint = getPos();
             testPoint.translate(0, -i);
             nextPotentialCovers.add(testPoint);
-            if(currentSide.contains(testPoint) || oppositeSide.contains(testPoint)){
+            if (currentSide.contains(testPoint) || oppositeSide.contains(testPoint)) {
                 break;
             }
         }
-        for(int i = 1; i < 8; i++){
+        for (int i = 1; i < 8; i++) {
             testPoint = getPos();
             testPoint.translate(-i, 0);
             nextPotentialCovers.add(testPoint);
-            if(currentSide.contains(testPoint) || oppositeSide.contains(testPoint)){
+            if (currentSide.contains(testPoint) || oppositeSide.contains(testPoint)) {
                 break;
             }
         }
 
-        for(Point p: nextPotentialCovers){
-            if(checkLimits(p)){
+        for (Point p : nextPotentialCovers) {
+            if (checkLimits(p)) {
                 nextCovers.add(p);
             }
         }
