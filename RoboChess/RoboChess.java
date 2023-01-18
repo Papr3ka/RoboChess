@@ -385,7 +385,7 @@ class RoboChess {
                 // Ensure invalid moves cannot be made involving the king
                 if(chessPieces.get(selectedPieceIndex) instanceof King){
     
-                    chessPieces.get(selectedPieceIndex).tempModeOn();
+                    //chessPieces.get(selectedPieceIndex).tempModeOn();
                     // Remove all the points that would put the king in check
                     chessPieces.get(selectedPieceIndex).hide(); // Hide the king from other pieces
                     for(int i = 0; i < chessPieces.size(); i++){
@@ -400,12 +400,38 @@ class RoboChess {
                             subPoints.remove(i);
                         }
                     }
-                    chessPieces.get(selectedPieceIndex).tempModeOff();
+                    //chessPieces.get(selectedPieceIndex).tempModeOff();
                     covers.clear();
                 }else{
 
                     // Check for other moves that could put the king in check
-                    // Check for moves that are allowed if the king is in check
+
+                    // Edge case of En Passant putting the king in check
+                    for(int i = 0; i < chessPieces.size(); i++){
+                        if(chessPieces.get(i).getSide() == oppositeTurn(turn) &&
+                           chessPieces.get(i) instanceof Pawn &&
+                           Math.abs(chessPieces.get(i).getPos().y - chessPieces.get(selectedPieceIndex).getPos().y) == 0 &&
+                           Math.abs(chessPieces.get(i).getPos().x - chessPieces.get(selectedPieceIndex).getPos().x) == 1 &&
+                           ((Pawn)chessPieces.get(i)).canEnPassant() &&
+                           chessPieces.get(i).getId() == mostRecentId){
+                            chessPieces.get(selectedPieceIndex).tempModeOn();
+                            originalPos = chessPieces.get(selectedPieceIndex).getPos();
+                            chessPieces.get(i).hide();
+                            chessPieces.get(selectedPieceIndex).moveToPoint(new Point(chessPieces.get(i).getPos().x, chessPieces.get(i).getPos().y - ((turn == BasePiece.Side.White) ? 1 : -1)));
+                            
+                            // Add the potential position only if it cannot put the king in check
+                            if(!checkCheck(chessPieces, turn)){
+                                chessPieces.get(i).show();
+                                subPoints.add(new Point(chessPieces.get(i).getPos().x, chessPieces.get(i).getPos().y - ((turn == BasePiece.Side.White) ? 1 : -1)));
+                            }
+
+                            chessPieces.get(i).show();
+                            chessPieces.get(selectedPieceIndex).moveToPoint(originalPos);
+                            chessPieces.get(selectedPieceIndex).tempModeOff();
+                            
+                        
+                        }
+                    }
                     chessPieces.get(selectedPieceIndex).tempModeOn();
                     for(int i = subPoints.size() - 1; i >= 0; i--){
                         chessPieces.get(selectedPieceIndex).moveToPoint(subPoints.get(i));
@@ -438,8 +464,12 @@ class RoboChess {
                 }
 
                 // Castle
+                // Somehow the opposite side's rook can castle with the king too
+                // This is not a bug, this is a features :)
                 if(chessPieces.get(selectedPieceIndex) instanceof King &&
-                   chessPieces.get(selectedPieceIndex).getMoves() == 0){
+                   chessPieces.get(selectedPieceIndex).getMoves() == 0 &&
+                   !checkCheck(chessPieces, turn)){
+
                     canCastle = true;
                     for(int i = 0; i < chessPieces.size(); i++){
                         if(chessPieces.get(i).getSide() == turn &&
@@ -447,7 +477,7 @@ class RoboChess {
                             chessPieces.get(i) instanceof King) &&
                             chessPieces.get(i).getPos().y == chessPieces.get(selectedPieceIndex).getPos().y){
                             covers.add(chessPieces.get(i).getPos());
-                           }
+                        }
                     }
                     chessPieces.get(selectedPieceIndex).hide();
                     chessPieces.get(selectedPieceIndex).tempModeOn();
@@ -459,13 +489,12 @@ class RoboChess {
                         }
                     }
                     for(int i = 0; i < chessPieces.size(); i++){
-                        if(chessPieces.get(i).getSide() == turn &&
-                           chessPieces.get(i) instanceof Rook &&
+                        if(chessPieces.get(i) instanceof Rook &&
                            chessPieces.get(i).getPos().x <= 4 &&
                            chessPieces.get(i).getMoves() > 0){
                             canCastle = false;
                             break;
-                           }
+                        }
                     }
                     if(canCastle){
                         chessPieces.get(selectedPieceIndex).moveToPoint(new Point(2, chessPieces.get(selectedPieceIndex).getPos().y));
@@ -490,7 +519,7 @@ class RoboChess {
                            chessPieces.get(i).getMoves() > 0){
                             canCastle = false;
                             break;
-                           }
+                        }
                     }
                     if(canCastle){
                         chessPieces.get(selectedPieceIndex).moveToPoint(new Point(6, chessPieces.get(selectedPieceIndex).getPos().y));
@@ -516,10 +545,25 @@ class RoboChess {
                            Math.abs(chessPieces.get(i).getPos().x - chessPieces.get(selectedPieceIndex).getPos().x) == 1 &&
                            ((Pawn)chessPieces.get(i)).canEnPassant() &&
                            chessPieces.get(i).getId() == mostRecentId){
-                            usingSpecialPos = true;
-                            specialPositions.add(chessPieces.get(i).getPos());
-                            subPoints.add(new Point(chessPieces.get(i).getPos().x, chessPieces.get(i).getPos().y - ((turn == BasePiece.Side.White) ? 1 : -1)));
-                           }
+                            chessPieces.get(selectedPieceIndex).tempModeOn();
+                            originalPos = chessPieces.get(selectedPieceIndex).getPos();
+                            chessPieces.get(i).hide();
+                            chessPieces.get(selectedPieceIndex).moveToPoint(new Point(chessPieces.get(i).getPos().x, chessPieces.get(i).getPos().y - ((turn == BasePiece.Side.White) ? 1 : -1)));
+                            
+                            // Add the potential position only if it cannot put the king in check
+                            if(!checkCheck(chessPieces, turn)){
+                                chessPieces.get(i).show();
+                                usingSpecialPos = true;
+                                specialPositions.add(chessPieces.get(i).getPos());
+                                subPoints.add(new Point(chessPieces.get(i).getPos().x, chessPieces.get(i).getPos().y - ((turn == BasePiece.Side.White) ? 1 : -1)));
+                            }
+
+                            chessPieces.get(i).show();
+                            chessPieces.get(selectedPieceIndex).moveToPoint(originalPos);
+                            chessPieces.get(selectedPieceIndex).tempModeOff();
+                            
+                        
+                        }
                     }
                 }
 
@@ -636,10 +680,36 @@ class RoboChess {
             // Check for checkmate
             teamMovablePieces = 0;
             for(int idx = 0; idx < chessPieces.size(); idx++){
+                subPoints = chessPieces.get(idx).getNextPositions(getSidePoints(chessPieces, turn), getSidePoints(chessPieces, oppositeTurn(turn)));
+                originalPos = chessPieces.get(idx).getPos();
                 if(chessPieces.get(idx).getSide() == turn){
-                  
-                    subPoints = chessPieces.get(idx).getNextPositions(getSidePoints(chessPieces, turn), getSidePoints(chessPieces, oppositeTurn(turn)));
-                    originalPos = chessPieces.get(idx).getPos();
+                    // Edge case of En Passant putting the king in check
+                    for(int i = 0; i < chessPieces.size(); i++){
+                        if(chessPieces.get(i).getSide() == oppositeTurn(turn) &&
+                           chessPieces.get(i) instanceof Pawn &&
+                           Math.abs(chessPieces.get(i).getPos().y - chessPieces.get(idx).getPos().y) == 0 &&
+                           Math.abs(chessPieces.get(i).getPos().x - chessPieces.get(idx).getPos().x) == 1 &&
+                           ((Pawn)chessPieces.get(i)).canEnPassant() &&
+                           chessPieces.get(i).getId() == mostRecentId){
+                            chessPieces.get(idx).tempModeOn();
+                            //originalPos = chessPieces.get(idx).getPos();
+                            chessPieces.get(i).hide();
+                            chessPieces.get(idx).moveToPoint(new Point(chessPieces.get(i).getPos().x, chessPieces.get(i).getPos().y - ((turn == BasePiece.Side.White) ? 1 : -1)));
+                            
+                            // Add the potential position only if it cannot put the king in check
+                            if(!checkCheck(chessPieces, turn)){
+                                chessPieces.get(i).show();
+                                subPoints.add(new Point(chessPieces.get(i).getPos().x, chessPieces.get(i).getPos().y - ((turn == BasePiece.Side.White) ? 1 : -1)));
+                            }
+
+                            chessPieces.get(i).show();
+                            //chessPieces.get(idx).moveToPoint(originalPos);
+                            chessPieces.get(idx).tempModeOff();
+                            
+                        
+                        }
+                    }
+
                     for(int i = subPoints.size() - 1; i >= 0; i--){
                         chessPieces.get(idx).tempModeOn();
                         chessPieces.get(idx).moveToPoint(subPoints.get(i));
