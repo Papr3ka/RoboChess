@@ -101,11 +101,15 @@ public class BasePiece extends RobotSE{
         }
     }
 
+    // Moves to a point while incrementing the move counter
+    // Used when an official move is made
     public void moveTo(Point p){
         moveToPoint(p);
         incrementMoves();
     }
 
+    // Moves to a point without incrementing the move counter
+    // Used for testing positions
     public void moveToPoint(Point p){
         if(useTempPoint){
             tempPoint = p;
@@ -131,16 +135,20 @@ public class BasePiece extends RobotSE{
         setTransparency(0.0d);    
     }
 
+    // Move a piece outside of the board, eliminating it from the game
+    // Makes the piece "inert"
     public void eliminate(Point elimPoint){
         eliminated = true;
         setTransparency(0.15d);
         moveTo(elimPoint);
     }
 
+    // Used for testing piece positions
     public void hide(){
         isPositionFake = true;
     }
 
+     // Used for testing piece positions
     public void show(){
         isPositionFake = false;
     }
@@ -149,31 +157,36 @@ public class BasePiece extends RobotSE{
         return isPositionFake;
     }
 
+    // Used for testing piece positions
     public void tempModeOn(){
         useTempPoint = true;
     }
 
+    // Used for testing piece positions
     public void tempModeOff(){
         useTempPoint = false;
     }
 
+    // Implemented in child classes
     public ArrayList<Point> getNextPositions(ArrayList<Point> currentSide, ArrayList<Point> oppositeSide){
         ArrayList<Point> current = new ArrayList<Point>();
         current.add(getPos());
         return current;
     }
 
+    // Implemented in child classes
     public ArrayList<Point> getNextCovers(ArrayList<Point> currentSide, ArrayList<Point> oppositeSide){
         ArrayList<Point> current = new ArrayList<Point>();
         current.add(getPos());
         return current;
     }
 
+    // Returns a special identification hash that each piece is given
     public int getId(){
         return id;
     }
 
-    // Checks if a position is within bounds of the chess board
+   // Checks if a position is within bounds of the chess board
     public boolean checkLimits(Point p){
         if((p.x >= 0) && (p.x < 8) && (p.y >= 0) && (p.y < 8)){
             return true;
@@ -181,7 +194,7 @@ public class BasePiece extends RobotSE{
         return false;
     }
 
-    // Overload for checking with king
+   // Overload for checking with king
     public boolean checkLimits(Point p, Point king){
         if((p.x >= 0) && (p.x < 8) && (p.y >= 0) && (p.y < 8) && !p.equals(king)){
             return true;

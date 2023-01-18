@@ -23,21 +23,21 @@ public class Board extends City{
         // Code here seems a bit sus (unsafe)
         chessBoard = new City[]{this}; 
 
+        // The white and black colors can be modified when the constructor is called
         colorWhite = colorWhite_;
         colorBlack = colorBlack_;
 
         shapeConst = new Rectangle2D.Double(0.0, 0.0, 1.0, 1.0);
 
+        // Make the outside of the board a certain color
         for(int x = -32; x < 96; x++){
             for(int y = -32; y < 96; y++){
                 this.getIntersection(y, x).setIcon(new ShapeIcon(shapeConst, colorWhite));
             }
         }
 
-
         // Create the pattern
         refreshBoard();
-
     }
 
     // returns reference of City

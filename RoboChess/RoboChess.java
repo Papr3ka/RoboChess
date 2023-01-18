@@ -20,6 +20,7 @@ class RoboChess {
         }
     }
 
+    // Initializes and places each piece on the board
     public static ArrayList<BasePiece> initializeBoard(Board board){
         ArrayList<BasePiece> pieces = new ArrayList<BasePiece>();
 
@@ -65,6 +66,7 @@ class RoboChess {
         return pieces;
     }
 
+    // Returns all the points of pieces on the chessboard
     public static ArrayList<Point> getAllPoints(ArrayList<BasePiece> pieces){
         ArrayList<Point> allPoints = new ArrayList<Point>();
         for(BasePiece piece: pieces){
@@ -73,6 +75,7 @@ class RoboChess {
         return allPoints;
     }
 
+    // Returns all the points on a certain side
     public static ArrayList<Point> getSidePoints(ArrayList<BasePiece> pieces, BasePiece.Side side){
         ArrayList<Point> allPoints = new ArrayList<Point>();
         for(BasePiece piece: pieces){
@@ -104,7 +107,7 @@ class RoboChess {
             return keyListener.getKey();
     }
 
-
+    // Returns the index of an array of the item with the minimum value
     public static int smallestVarVec(ArrayList<Double> vec){
         // Error
         if(vec.size() == 0){
@@ -124,6 +127,8 @@ class RoboChess {
         return idx;
     }
 
+    // Get the point of a piece given its type and side
+    // If multiple exist, the first is chosen
     public static Point getPiecePos(ArrayList<BasePiece> chessPieces, Class<?> piece, BasePiece.Side side){
         Point pPoint = new Point(64, 24);
         for(BasePiece p: chessPieces){
@@ -206,6 +211,7 @@ class RoboChess {
 
     }
 
+    // Inverts the enum "BasePiece.Side"
     public static BasePiece.Side oppositeTurn(BasePiece.Side turn){
         if(turn == BasePiece.Side.White){
             return BasePiece.Side.Black;
@@ -242,6 +248,7 @@ class RoboChess {
         return false;
     }
 
+    // main entry point
     public static void main(String[] args){
         // Initialize Chess Board
         Board chessBoard                 = new Board(new Color(234, 233, 210, 255), new Color(75, 115, 153, 255));
@@ -274,7 +281,7 @@ class RoboChess {
         ArrayList<Point> covers           = new ArrayList<Point>();
         ArrayList<Point> subPoints        = new ArrayList<Point>();
         ArrayList<Point> invalidSubPoints = new ArrayList<Point>();
-        ArrayList<Point> specialPositions  = new ArrayList<Point>();
+        ArrayList<Point> specialPositions = new ArrayList<Point>();
         int selectedPieceIndex            = -1;
         int mostRecentId                  = 0;
         int secondMostRecentId            = 0;
@@ -297,9 +304,9 @@ class RoboChess {
             }
 
             if(turn == BasePiece.Side.White){
-                chessBoard.setFrameTitle("RoboChess: White Turn");
+                chessBoard.setFrameTitle(String.format("RoboChess: Turn %d: White", turnCount));
             }else{
-                chessBoard.setFrameTitle("RoboChess: Black Turn");
+                chessBoard.setFrameTitle(String.format("RoboChess: Turn %d: Black", turnCount));
             }
 
             covers.clear();
@@ -369,6 +376,7 @@ class RoboChess {
             inSubState  = true;
             subSelector = selector;
 
+            // The substate provides points to where a piece can move to or an action that can be performed
             // Wait for user to select option
             while(inSubState){
 
@@ -377,8 +385,10 @@ class RoboChess {
                 invalidSubPoints.clear();
                 specialPositions.clear();
 
+                // Enables the special selector, used for En Passant
                 usingSpecialPos = false;
 
+                // Refresh the working variables
                 covers.clear();
                 originalPos = chessPieces.get(selectedPieceIndex).getPos();
                 
@@ -404,8 +414,6 @@ class RoboChess {
                     covers.clear();
                 }else{
 
-                    // Check for other moves that could put the king in check
-
                     // Edge case of En Passant putting the king in check
                     for(int i = 0; i < chessPieces.size(); i++){
                         if(chessPieces.get(i).getSide() == oppositeTurn(turn) &&
@@ -428,10 +436,11 @@ class RoboChess {
                             chessPieces.get(i).show();
                             chessPieces.get(selectedPieceIndex).moveToPoint(originalPos);
                             chessPieces.get(selectedPieceIndex).tempModeOff();
-                            
-                        
+                    
                         }
                     }
+                    
+                    // Check for other moves that could put the king in check
                     chessPieces.get(selectedPieceIndex).tempModeOn();
                     for(int i = subPoints.size() - 1; i >= 0; i--){
                         chessPieces.get(selectedPieceIndex).moveToPoint(subPoints.get(i));
@@ -449,7 +458,6 @@ class RoboChess {
                                 }
                                 chessPieces.get(j).show();
                             }
-       
                         }
                         
                         if(isPointClear && checkCheck(chessPieces, turn)){
@@ -567,23 +575,25 @@ class RoboChess {
                     }
                 }
 
+                // Display all the options available
                 if(!selectorIsHidden){
+                    // Points that the piece could move to but would put the king in check
                     for(Point iSubP: invalidSubPoints){
                         chessBoard.selectBoard(iSubP.x, iSubP.y, invalidColor);
                     }
+                    // Points in which the piece could move to
                     for(Point subP: subPoints){
                         chessBoard.selectBoard(subP.x, subP.y, optionsColor);
                     }
+                    // Special moves
                     for(Point iSP: specialPositions){
                         chessBoard.selectBoard(iSP.x, iSP.y, specialColor);
                     }
-
+                    // Display the selector on the board
                     chessBoard.selectBoard(subSelector.x, subSelector.y, subSelectionColor);
                 }
-
-                // Display possible options for the piece
-                
-
+               
+                // Wait for a keyboard input and move the piece accordingly
                 keyPress = waitKeyInterrupt(keyListener);
                 switch(keyPress){
                     case 87: case 119: // W w
@@ -602,7 +612,7 @@ class RoboChess {
                         subSelector = moveNextPoint(subSelector, subPoints, Direction.EAST);
                         break;
     
-                    case 72: case 104:
+                    case 72: case 104: // H h hide the selector
                         selectorIsHidden = !selectorIsHidden;
                         break;
     
@@ -616,6 +626,7 @@ class RoboChess {
                         // Move piece here
                         chessPieces.get(selectedPieceIndex).moveTo(subSelector);
 
+                        // Castling
                         if(chessPieces.get(selectedPieceIndex) instanceof King &&
                            specialPositions.contains(subSelector)){
                             for(int i = 0; i < chessPieces.size(); i++){
@@ -634,6 +645,8 @@ class RoboChess {
                                 chessPieces.get(i).getSide() == oppositeTurn(turn)) ||
                                 (chessPieces.get(i).getPos().equals(new Point(subSelector.x, subSelector.y + ((turn == BasePiece.Side.White) ? 1 : -1))) &&
                                 usingSpecialPos)){
+
+                                // Place the piece on the side accordingly
                                 if(chessPieces.get(i).getSide() == BasePiece.Side.Black){
                                     chessPieces.get(i).eliminate(elimNextClearBlack);
                                     elimNextClearBlack.y++;
@@ -678,6 +691,7 @@ class RoboChess {
             }
 
             // Check for checkmate
+            // Check for how many pieces on the current turn can move
             teamMovablePieces = 0;
             for(int idx = 0; idx < chessPieces.size(); idx++){
                 subPoints = chessPieces.get(idx).getNextPositions(getSidePoints(chessPieces, turn), getSidePoints(chessPieces, oppositeTurn(turn)));
@@ -726,7 +740,6 @@ class RoboChess {
                                 }
                                 chessPieces.get(j).show();
                             }
-        
                         }
                         
                         if(isPointClear && checkCheck(chessPieces, turn)){
@@ -763,7 +776,7 @@ class RoboChess {
             kingPos = getPiecePos(chessPieces, King.class, turn);
             chessBoard.selectBoard(kingPos.x, kingPos.y, invalidColor);
             if(turn == BasePiece.Side.Black){
-                chessBoard.setFrameTitle("RoboChess: White Wins!");
+                chessBoard.setFrameTitle("RoboChess: White Wins");
             }else{
                 chessBoard.setFrameTitle("RoboChess: Black Wins!");
             }
