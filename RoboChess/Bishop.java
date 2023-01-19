@@ -49,6 +49,7 @@ public class Bishop extends BasePiece {
         piece.setTransparency(1.0d);
     }
 
+    // Returns an array in which the Bishop can move to considering the points on the current and opposite side
     public ArrayList<Point> getNextPositions(ArrayList<Point> currentSide, ArrayList<Point> oppositeSide) {
         ArrayList<Point> nextPotentialPositions = getNextCovers(currentSide, oppositeSide);
         ArrayList<Point> nextPositions = new ArrayList<Point>();
@@ -68,6 +69,8 @@ public class Bishop extends BasePiece {
         return nextPositions;
     }
 
+    // Returns an array in which the Bishop is covering to considering the points on the current and opposite side
+    // Used to determine if the king is in check or not
     public ArrayList<Point> getNextCovers(ArrayList<Point> currentSide, ArrayList<Point> oppositeSide) {
         ArrayList<Point> nextPotentialCovers = new ArrayList<Point>();
         ArrayList<Point> nextCovers = new ArrayList<Point>();
@@ -76,7 +79,7 @@ public class Bishop extends BasePiece {
             return nextCovers;
         }
 
-        //
+        // Tedious process of collecting diagnol points and testing them
         Point testPoint = getPos();
         for (int i = 1; i < 8; i++) {
             testPoint = getPos();

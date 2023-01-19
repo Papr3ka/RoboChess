@@ -36,10 +36,50 @@ import becker.robots.Direction;
  *         ^-RookIcon
  * 
  * All of the different chess Pieces are a subclass of BasePiece
- * These are initialized and stored in an ArrayList of type BasePiece
- * All BasePieces inherit Board in their constuctors. Many classes 
- * inherit the BasePiece.Side enum
- */
+ * Utilizing polymorphism, these pieces are initialized and stored
+ * in an ArrayList of type BasePiece. All BasePieces inherit Board
+ * in their constuctors. Many classes inherit the BasePiece.Side enum.
+ * Methods of specific pieces are overrided in the child classes of
+ * BasePiece. Specific child classes of BasePiece also contain 
+ * constructor overloads for creating a new piece from nothing and
+ * also transforming it as seen in Pawn promotion (Queen only but
+ * overloaded constructors exist with Rook, Bishop and knight)
+ * 
+ * Program control flow
+ * 
+ * Start
+ *  |
+ * Initialize
+ *  |
+ * Main loop
+ *       |
+ *   v--Wait for input<----------------------------------------
+ *   |    |      ^               ^                     ^      ^
+ *   |  Move Selector to point   |                     |      |
+ *   |                           |                     |      |
+ *   |->Selection                |                     |      |
+ *       |               (no)    |               (esc) |      |
+ *      Valid Selection?---------^                     |      |
+ *       | (yes)                                       |      |
+ *      Generate all potential options                 |      |
+ *       |                                             |      |
+ *      Validate all options (check, blocking, etc...) |      |
+ *       |                                             |      |
+ *      Wait for Selection-----------------------------^      |
+ *       |                                                    |
+ *      Execute selection (Move piece to, eliminate, etc...)  |
+ *       |                                                    |
+ *      Change to next turn                                   |
+ *       |                        (no checkmate or stalemate) |
+ *      Check for Checkmate or Stalemate----------------------^
+ *       | (checkmate or stalemate)
+ *      Display winner or stalemate
+ *       |
+ *   v---< 
+ *   |
+ *  Game end  
+ * 
+ */      
 
 
 // Main class
@@ -60,6 +100,7 @@ class RoboChess {
     public static ArrayList<BasePiece> initializeBoard(Board board) {
         ArrayList<BasePiece> pieces = new ArrayList<BasePiece>();
 
+        // Each piece is placed specifically on the board
         // Black Pieces
         pieces.add(new Rook(board, 0, 0, BasePiece.Side.Black));
         pieces.add(new Rook(board, 7, 0, BasePiece.Side.Black));
@@ -180,6 +221,7 @@ class RoboChess {
     // Finds the closest point in the corresponding direction
     public static Point moveNextPoint(Point current, ArrayList<Point> options, Direction direction) {
 
+        // Remove the current point
         for (int i = options.size() - 1; i >= 0; i--) {
             if (options.get(i).equals(current)) {
                 options.remove(i);
@@ -193,6 +235,7 @@ class RoboChess {
         double dx;
         double dy;
 
+        // Remove points that are not in a certain direction
         if (direction == Direction.NORTH) {
             for (int i = options.size() - 1; i >= 0; i--) {
                 dx = options.get(i).getX() - current.getX();
@@ -229,6 +272,7 @@ class RoboChess {
             }
         }
 
+        // Find the distances to all the points
         for (int i = 0; i < options.size(); i++) {
             cPoint = options.get(i);
             distances.add(Math
@@ -239,10 +283,12 @@ class RoboChess {
             return current;
         }
 
+        
         if (smallestVarVec(distances) == -1) {
             return options.get(0);
         }
 
+        // Find and return the closest point
         return options.get(smallestVarVec(distances));
 
     }
@@ -258,6 +304,8 @@ class RoboChess {
     // Returns true if the king is in check
     public static boolean checkCheck(ArrayList<BasePiece> chessPieces, BasePiece.Side turn) {
         int kingIdx = -1;
+
+        // Get the position of the king
         for (int idx = 0; idx < chessPieces.size(); idx++) {
             if (chessPieces.get(idx) instanceof King && chessPieces.get(idx).getSide() == turn) {
                 kingIdx = idx;
@@ -270,14 +318,20 @@ class RoboChess {
         }
 
         ArrayList<Point> covers = new ArrayList<Point>();
+
+
         chessPieces.get(kingIdx).hide(); // Hide the king from other pieces
+        // Find all the covers of each piece
         for (int i = 0; i < chessPieces.size(); i++) {
             if (chessPieces.get(i).getSide() == oppositeTurn(turn)) {
                 covers.addAll(chessPieces.get(i).getNextCovers(getSidePoints(chessPieces, turn),
                         getSidePoints(chessPieces, oppositeTurn(turn))));
             }
         }
+
         chessPieces.get(kingIdx).show();
+
+        // Compare all the covers with the king's position
         if (covers.contains(chessPieces.get(kingIdx).getPos())) {
             return true;
         }
@@ -467,6 +521,7 @@ class RoboChess {
                                 &&
                                 ((Pawn) chessPieces.get(i)).canEnPassant() &&
                                 chessPieces.get(i).getId() == mostRecentId) {
+                                    
                             chessPieces.get(selectedPieceIndex).tempModeOn();
                             originalPos = chessPieces.get(selectedPieceIndex).getPos();
                             chessPieces.get(i).hide();
@@ -492,6 +547,8 @@ class RoboChess {
                     for (int i = subPoints.size() - 1; i >= 0; i--) {
                         chessPieces.get(selectedPieceIndex).moveToPoint(subPoints.get(i));
                         isPointClear = true;
+
+                        // Fill an array of what points are covered by the opposite side
                         for (int j = 0; j < chessPieces.size(); j++) {
                             if (chessPieces.get(j).getPos().equals(subPoints.get(i))
                                     && chessPieces.get(j).getSide() == oppositeTurn(turn)) {
@@ -508,6 +565,7 @@ class RoboChess {
                             }
                         }
 
+                        // Remove the subpoint if it is covered by another piece
                         if (isPointClear && checkCheck(chessPieces, turn)) {
                             invalidSubPoints.add(subPoints.get(i));
                             subPoints.remove(i);
@@ -539,6 +597,8 @@ class RoboChess {
                     chessPieces.get(selectedPieceIndex).hide();
                     chessPieces.get(selectedPieceIndex).tempModeOn();
                     originalPos = chessPieces.get(selectedPieceIndex).getPos();
+
+                    // Check for castling to the left
                     for (int i = 1; i <= 3; i++) {
                         if (covers.contains(new Point(i, chessPieces.get(selectedPieceIndex).getPos().y))) {
                             canCastle = false;
@@ -562,8 +622,9 @@ class RoboChess {
                         chessPieces.get(selectedPieceIndex).moveToPoint(originalPos);
 
                     }
-                    canCastle = true;
 
+                    // Check for castling to the right side
+                    canCastle = true;
                     for (int i = 5; i <= 6; i++) {
                         if (covers.contains(new Point(i, chessPieces.get(selectedPieceIndex).getPos().y))) {
                             canCastle = false;
@@ -597,6 +658,7 @@ class RoboChess {
                 // En Passant
                 if (chessPieces.get(selectedPieceIndex) instanceof Pawn) {
                     for (int i = 0; i < chessPieces.size(); i++) {
+                        // Check if pawn meets the criteria for En Passant
                         if (chessPieces.get(i).getSide() == oppositeTurn(turn) &&
                                 chessPieces.get(i) instanceof Pawn &&
                                 Math.abs(chessPieces.get(i).getPos().y

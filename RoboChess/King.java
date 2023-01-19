@@ -29,6 +29,7 @@ public class King extends BasePiece {
         setColor(color);
     }
 
+    // Returns an array in which the King can move to considering the points on the current and opposite side
     public ArrayList<Point> getNextPositions(ArrayList<Point> currentSide, ArrayList<Point> oppositeSide) {
         ArrayList<Point> nextPotentialPositions = getNextCovers(currentSide, oppositeSide);
         ArrayList<Point> nextPositions = new ArrayList<Point>();
@@ -47,6 +48,8 @@ public class King extends BasePiece {
         return nextPositions;
     }
 
+    // Returns an array in which the King is covering to considering the points on the current and opposite side
+    // Used to determine if the king is in check or not
     public ArrayList<Point> getNextCovers(ArrayList<Point> currentSide, ArrayList<Point> oppositeSide) {
         ArrayList<Point> nextPotentialCovers = new ArrayList<Point>();
         ArrayList<Point> nextCovers = new ArrayList<Point>();
@@ -55,6 +58,8 @@ public class King extends BasePiece {
             return nextCovers;
         }
 
+        // Generate and test points
+        // points are tested to see if they are specifically occupied or not
         Point testPoint;
         for (int i = -1; i <= 1; i++) {
             testPoint = getPos();

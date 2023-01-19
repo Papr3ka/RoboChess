@@ -48,6 +48,7 @@ public class Knight extends BasePiece{
         piece.setTransparency(1.0d);
     }
 
+    // Returns an array in which the Knight can move to considering the points on the current and opposite side
     public ArrayList<Point> getNextPositions(ArrayList<Point> currentSide, ArrayList<Point> oppositeSide){
         ArrayList<Point> nextPositions = new ArrayList<Point>();
         ArrayList<Point> nextPotentialPositions = getNextCovers(currentSide, oppositeSide);
@@ -74,6 +75,7 @@ public class Knight extends BasePiece{
             return nextCovers;
         }
 
+        // Create all the points in which the knight is able to move to
         Point testPoint;
         testPoint = getPos();
         testPoint.translate(1, 2);
@@ -101,6 +103,7 @@ public class Knight extends BasePiece{
         testPoint.translate(-2, -1);
         nextPotentialCovers.add(testPoint);
         
+        // Check if the points are within the limits of the chess board
         for(Point p: nextPotentialCovers){
             if(checkLimits(p)){
                 nextCovers.add(p);

@@ -155,6 +155,9 @@ public class BasePiece extends RobotSE {
     }
 
     // Used for testing piece positions
+    // These methods ensure that when testing for check or getting
+    // covers, the piece remains undetected and thus will not effect
+    // the outcome of other methods 
     public void hide() {
         isPositionFake = true;
     }

@@ -65,19 +65,9 @@ public class Pawn extends BasePiece {
             yDirection = -1;
         }
 
+        // Test to see if an opponent piece exists diagnol to the pawn
         Point pRight = getPos();
         Point pLeft = getPos();
-
-        // pRight.translate(1, 0);
-        // pLeft.translate(-1, 0);
-        // // En Passant
-        // if(oppositeSide.contains(pRight)){
-        // nextPositions.add(new Point(pRight.x, pRight.y + yDirection));
-        // }
-
-        // if(oppositeSide.contains(pLeft)){
-        // nextPositions.add(new Point(pLeft.x, pLeft.y + yDirection));
-        // }
 
         pRight.translate(1, yDirection);
         pLeft.translate(-1, yDirection);
@@ -94,6 +84,7 @@ public class Pawn extends BasePiece {
         pNext.translate(0, yDirection);
         pNext2.translate(0, yDirection * 2);
 
+        // Check if the pawn can move forward
         if (!(currentSide.contains(pNext) || oppositeSide.contains(pNext))) {
             nextPositions.add(pNext);
             if (!(currentSide.contains(pNext2) || oppositeSide.contains(pNext2)) && getMoves() == 0) {
@@ -101,6 +92,7 @@ public class Pawn extends BasePiece {
             }
         }
 
+        // Check if the next positions are within limits
         for (int i = nextPositions.size() - 1; i >= 0; i--) {
             if (!checkLimits(nextPositions.get(i))) {
                 nextPositions.remove(i);
@@ -123,6 +115,7 @@ public class Pawn extends BasePiece {
         if (side == Side.White) {
             yDirection = -1;
         }
+
         Point testPoint;
         testPoint = getPos();
         testPoint.translate(1, yDirection);

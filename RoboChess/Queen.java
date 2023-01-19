@@ -49,6 +49,7 @@ public class Queen extends BasePiece {
         piece.setTransparency(1.0d);
     }
 
+    // Returns an array in which the Queen can move to considering the points on the current and opposite side
     public ArrayList<Point> getNextPositions(ArrayList<Point> currentSide, ArrayList<Point> oppositeSide) {
         ArrayList<Point> nextPotentialPositions = getNextCovers(currentSide, oppositeSide);
         ArrayList<Point> nextPositions = new ArrayList<Point>();
@@ -67,6 +68,7 @@ public class Queen extends BasePiece {
         return nextPositions;
     }
 
+    // Returns an array in which the Queen is covering to considering the points on the current and opposite side
     public ArrayList<Point> getNextCovers(ArrayList<Point> currentSide, ArrayList<Point> oppositeSide) {
         ArrayList<Point> nextPotentialCovers = new ArrayList<Point>();
         ArrayList<Point> nextCovers = new ArrayList<Point>();
@@ -75,7 +77,7 @@ public class Queen extends BasePiece {
             return nextCovers;
         }
 
-        //
+        // Generate all the horizontal, vertical and diagnol points and validate them
         Point testPoint = getPos();
         // Diaganols
         for (int i = 1; i < 8; i++) {
