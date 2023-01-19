@@ -922,7 +922,7 @@ class RoboChess {
             kingPos = getPiecePos(chessPieces, King.class, turn);
             chessBoard.selectBoard(kingPos.x, kingPos.y, invalidColor);
             if (turn == BasePiece.Side.Black) {
-                chessBoard.setFrameTitle("RoboChess: White Wins");
+                chessBoard.setFrameTitle("RoboChess: White Wins!");
             } else {
                 chessBoard.setFrameTitle("RoboChess: Black Wins!");
             }
